@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 61
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -530159753, guid: 68c7e4565cde54155bb78d8e935f1dd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cacheType: 3
+  lastUpdatedAtString: 2018-08-27T10:22:55.817+02:00
+  initializedAtString: 2018-08-27T10:22:55.817+02:00
+  log:
+  - commitID: d23d134e38ee2238a2de860585a892f1b025b815
+    mergeA: 
+    mergeB: 
+    authorName: nick1392
+    authorEmail: niccolo.bisagno@unitn.it
+    commitEmail: niccolo.bisagno@unitn.it
+    commitName: nick1392
+    summary: Initial commit
+    description: Initial commit
+    timeString: 2018-08-27T10:22:54.000+02:00
+    commitTimeString: 2018-08-27T10:22:54.000+02:00
+    changes:
+    - path: .gitattributes
+      fullPath: C:\Users\Niccolo\Documents\Unity\HeteogenousCameraNetwork\datasetsScenes_icdsc\.gitattributes
+      projectPath: .gitattributes
+      originalPath: 
+      status: 4
+      staged: 0
+    - path: .gitignore
+      fullPath: C:\Users\Niccolo\Documents\Unity\HeteogenousCameraNetwork\datasetsScenes_icdsc\.gitignore
+      projectPath: .gitignore
+      originalPath: 
+      status: 4
+      staged: 0
+    - path: Assets\.gitignore
+      fullPath: C:\Users\Niccolo\Documents\Unity\HeteogenousCameraNetwork\datasetsScenes_icdsc\Assets\.gitignore
+      projectPath: Assets\.gitignore
+      originalPath: 
+      status: 4
+      staged: 0
