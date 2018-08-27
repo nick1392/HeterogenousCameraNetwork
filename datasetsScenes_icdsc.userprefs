@@ -1,0 +1,24 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/MapController.cs">
+    <Files>
+      <File FileName="Assets/CameraControllerFOV.cs" Line="97" Column="1" />
+      <File FileName="Assets/greedy_drone.cs" Line="184" Column="1" />
+      <File FileName="Assets/Scripts/Namespaces.cs" Line="1" Column="1" />
+      <File FileName="Assets/GridController.cs" Line="245" Column="44" />
+      <File FileName="Assets/UI/CameraControllerPTZ.cs" Line="99" Column="1" />
+      <File FileName="Assets/Greedy_PTZ.cs" Line="92" Column="6" />
+      <File FileName="Assets/UI/Tracking.cs" Line="1" Column="1" />
+      <File FileName="Assets/PeopleSources/Scripts/RectangularSource.cs" Line="49" Column="89" />
+      <File FileName="Assets/CamerasManager/Scripts/CamerasManager.cs" Line="12" Column="36" />
+      <File FileName="Assets/UI/SimController.cs" Line="17" Column="18" />
+      <File FileName="Assets/Editor/CamerasManager_Editor.cs" Line="23" Column="30" />
+      <File FileName="Assets/Scripts/MovementDrone.cs" Line="222" Column="8" />
+      <File FileName="Assets/MapController.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
