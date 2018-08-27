@@ -1,0 +1,216 @@
+fileFormatVersion: 2
+guid: a5e7e544a82c23d42b15f46036794a0a
+timeCreated: 1484237572
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: group_0
+    100002: group_1
+    100004: group_2
+    100006: group_3
+    100008: group_4
+    100010: group_5
+    100012: group_6
+    100014: group_7
+    100016: group_8
+    100018: ID102
+    100020: ID124
+    100022: ID128
+    100024: ID132
+    100026: ID136
+    100028: ID156
+    100030: ID166
+    100032: ID170
+    100034: ID174
+    100036: ID178
+    100038: ID18
+    100040: ID182
+    100042: ID186
+    100044: ID18_MeshPart0
+    100046: ID18_MeshPart1
+    100048: ID190
+    100050: ID194
+    100052: ID198
+    100054: ID202
+    100056: ID224
+    100058: ID228
+    100060: ID232
+    100062: ID236
+    100064: ID253
+    100066: ID259
+    100068: ID26
+    100070: ID265
+    100072: ID56
+    100074: ID66
+    100076: ID70
+    100078: ID74
+    100080: ID78
+    100082: ID82
+    100084: ID86
+    100086: ID90
+    100088: ID94
+    100090: ID98
+    100092: Last Saved SketchUp View
+    100094: //RootNode
+    400000: group_0
+    400002: group_1
+    400004: group_2
+    400006: group_3
+    400008: group_4
+    400010: group_5
+    400012: group_6
+    400014: group_7
+    400016: group_8
+    400018: ID102
+    400020: ID124
+    400022: ID128
+    400024: ID132
+    400026: ID136
+    400028: ID156
+    400030: ID166
+    400032: ID170
+    400034: ID174
+    400036: ID178
+    400038: ID18
+    400040: ID182
+    400042: ID186
+    400044: ID18_MeshPart0
+    400046: ID18_MeshPart1
+    400048: ID190
+    400050: ID194
+    400052: ID198
+    400054: ID202
+    400056: ID224
+    400058: ID228
+    400060: ID232
+    400062: ID236
+    400064: ID253
+    400066: ID259
+    400068: ID26
+    400070: ID265
+    400072: ID56
+    400074: ID66
+    400076: ID70
+    400078: ID74
+    400080: ID78
+    400082: ID82
+    400084: ID86
+    400086: ID90
+    400088: ID94
+    400090: ID98
+    400092: Last Saved SketchUp View
+    400094: //RootNode
+    2300000: group_0
+    2300002: group_1
+    2300004: group_2
+    2300006: group_3
+    2300008: group_4
+    2300010: group_5
+    2300012: group_6
+    2300014: group_7
+    2300016: group_8
+    2300018: ID18_MeshPart0
+    2300020: ID18_MeshPart1
+    2300022: ID253
+    2300024: ID259
+    2300026: ID26
+    2300028: ID265
+    2300030: //RootNode
+    3300000: group_0
+    3300002: group_1
+    3300004: group_2
+    3300006: group_3
+    3300008: group_4
+    3300010: group_5
+    3300012: group_6
+    3300014: group_7
+    3300016: group_8
+    3300018: ID18_MeshPart0
+    3300020: ID18_MeshPart1
+    3300022: ID253
+    3300024: ID259
+    3300026: ID26
+    3300028: ID265
+    3300030: //RootNode
+    4300000: SketchUp
+    4300002: ID253
+    4300004: ID259
+    4300006: ID265
+    4300008: group_0
+    4300010: ID18_MeshPart0
+    4300012: ID18_MeshPart1
+    4300014: ID26
+    4300016: group_1
+    4300018: group_2
+    4300020: group_3
+    4300022: group_4
+    4300024: group_5
+    4300026: group_6
+    4300028: group_7
+    4300030: group_8
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.02
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
