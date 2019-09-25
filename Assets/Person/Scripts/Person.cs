@@ -76,6 +76,8 @@ public class Person : MonoBehaviour
     public float escapeRange = 15f;
     public float escapeForce = 7.0f;
     public float escapeThreshold = 0.5f;
+
+    public LayerMask objectsLayerMask = 9;
     //__________OGJ_INTERACTION_END_________________
 
 
@@ -125,21 +127,16 @@ public class Person : MonoBehaviour
         closeRect = new Rect(20, 20, 140, 100);
         selection = transform.Find("New Sprite(Clone)");
         selection.gameObject.SetActive(false);
+        animator = GetComponent<Animator>();
+        PersonCollection.Instance.People.Add(gameObject);
     }
 
 
     // Update is called once per frame
     void Update()
     {
-
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-            if (animator != null)
-            {
-                animator.SetFloat(offsetHash, Random.value);
-            }
-        }
+        if (animator)
+            animator.SetFloat(offsetHash, Random.value);
 
         totalForce = Vector3.zero;
 
@@ -167,7 +164,7 @@ public class Person : MonoBehaviour
         /***********************************
          * FORZE DI REPULSIONE TRA PERSONE *
          ***********************************/
-        GameObject[] people = GameObject.FindGameObjectsWithTag(tagPerson);
+        GameObject[] people = PersonCollection.Instance.People.ToArray();
 
         foreach (GameObject person in people)
         {
@@ -286,30 +283,30 @@ public class Person : MonoBehaviour
                 hitDistance[0] = 100.0f;
                 hitDistance[1] = 100.0f;
                 hitDistance[2] = 100.0f;
-                if (Physics.Raycast(gameObject.transform.position + heightEye1, eyeDir, out hit, objRange3))
+                if (Physics.Raycast(gameObject.transform.position + heightEye1, eyeDir, out hit, objRange3, objectsLayerMask))
                 {
                     hitDistance[0] = hit.distance;
-                    if (hit.collider.tag == "Oggetti")
+                    if (hit.collider.CompareTag("Oggetti"))
                     {
                         validHit = true;
                     }
                     //Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + eyeDir*hit.distance, Color.blue);
                 }
-                if (Physics.Raycast(gameObject.transform.position + heightEye2, eyeDir, out hit, objRange3))
+                if (Physics.Raycast(gameObject.transform.position + heightEye2, eyeDir, out hit, objRange3, objectsLayerMask))
                 {
                     //converto in coordinate 2D
 
                     hitDistance[1] = hit.distance;
-                    if (hit.collider.tag == "Oggetti")
+                    if (hit.collider.CompareTag("Oggetti"))
                     {
                         validHit = true;
                     }
                     //Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + eyeDir*hit.distance, Color.blue);
                 }
-                if (Physics.Raycast(gameObject.transform.position + heightEye3, eyeDir, out hit, objRange3))
+                if (Physics.Raycast(gameObject.transform.position + heightEye3, eyeDir, out hit, objRange3, objectsLayerMask))
                 {
                     hitDistance[2] = hit.distance;
-                    if (hit.collider.tag == "Oggetti")
+                    if (hit.collider.CompareTag("Oggetti"))
                     {
                         validHit = true;
                     }
@@ -384,9 +381,9 @@ public class Person : MonoBehaviour
                 desiredDirection = transform.position;
             }
             Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + desiredDirection.normalized * 10, Color.yellow);
-            if (Physics.Raycast(gameObject.transform.position + heightEye2, desiredDirection, out hitRay, escapeRange))
+            if (Physics.Raycast(gameObject.transform.position + heightEye2, desiredDirection, out hitRay, escapeRange, objectsLayerMask))
             {
-                if (hitRay.collider.tag == "Oggetti")
+                if (hitRay.collider.CompareTag("Oggetti"))
                 {
                     // Trova una direzione il cui gradiente rispetto all'angolo di visuale sia abbastanza elevato da essere considerato come una via per schivare l'oggetto.
 
@@ -408,7 +405,7 @@ public class Person : MonoBehaviour
 
                         if (Physics.Raycast(gameObject.transform.position + heightEye2, dirTest, out hitRay, escapeRange))
                         {
-                            if (hitRay.collider.tag == "Oggetti")
+                            if (hitRay.collider.CompareTag("Oggetti"))
                             {
                                 escapeDistance[pointer] = hitRay.distance;
                             }
@@ -545,10 +542,12 @@ public class Person : MonoBehaviour
                 {
                     if (transform.parent.childCount == 1 && transform.parent.CompareTag(tagGroup))
                     {
+                        PersonCollection.Instance.People.Remove(transform.parent.gameObject);
                         Destroy(transform.parent.gameObject);
                     }
                     else
                     {
+                        PersonCollection.Instance.People.Remove(gameObject);
                         Destroy(gameObject);
                     }
                 }
@@ -656,7 +655,7 @@ public class Person : MonoBehaviour
         {
             // Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
             // windowRect.position = new Vector2(pos.x, Screen.height - pos.y);
-            windowRect.position = new Vector2( Screen.width /2, Screen.height - 110);
+            windowRect.position = new Vector2( Screen.width / 2f, Screen.height - 110);
             windowRect = GUI.Window(0, windowRect, DoMyWindow, new GUIContent("Person ID " + PersonID.ToString() + "\n Velocity " + walkingVector.magnitude.ToString("F3") + "m/s"));
             selection.gameObject.SetActive(true);
         }
@@ -679,8 +678,7 @@ public class Person : MonoBehaviour
     {
         GameObject myLine = new GameObject();
         myLine.transform.position = start;
-        myLine.AddComponent<LineRenderer>();
-        LineRenderer lr = myLine.GetComponent<LineRenderer>();
+        LineRenderer lr = myLine.AddComponent<LineRenderer>();
         lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
         lr.SetColors(color, color);
         lr.SetWidth(0.2f, 0.2f);

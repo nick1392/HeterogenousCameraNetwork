@@ -84,6 +84,7 @@
           <e p="IDGenerator.cs" t="Include" />
           <e p="PeopleEditorGenerator.cs" t="Include" />
           <e p="Person.cs" t="Include" />
+          <e p="PersonCollection.cs" t="Include" />
         </e>
       </e>
       <e p="Assets/Scripts" t="Include">
