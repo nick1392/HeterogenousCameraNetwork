@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets/CamerasManager" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="CamerasManager.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Assets/CrowdMetric" t="Include">
+        <e p="RendererExtensions.cs.cs" t="Include" />
+      </e>
+      <e p="Assets/Downloaded" t="Include">
+        <e p="Cars" t="Include">
+          <e p="Scripts" t="Include">
+            <e p="TakeScreenshot.cs" t="Include" />
+          </e>
+          <e p="Standard Assets" t="Include">
+            <e p="Character Controllers" t="Include">
+              <e p="Sources" t="Include">
+                <e p="Scripts" t="Include">
+                  <e p="MouseLook.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="HighQualityBricks&amp;Walls" t="Include">
+          <e p="README.txt" t="Include" />
+          <e p="Shaders" t="Include">
+            <e p="brick-807728.shader" t="Include" />
+            <e p="brick-957823.shader" t="Include" />
+            <e p="brick-957827.shader" t="Include" />
+            <e p="bricks-868344.shader" t="Include" />
+            <e p="patch-924648.shader" t="Include" />
+            <e p="shading-671263.shader" t="Include" />
+            <e p="stone-805287.shader" t="Include" />
+            <e p="texture-709723.shader" t="Include" />
+            <e p="tile-846018.shader" t="Include" />
+            <e p="wall-617961.shader" t="Include" />
+            <e p="wall-846013.shader" t="Include" />
+            <e p="wall-846015.shader" t="Include" />
+            <e p="wood-731407.shader" t="Include" />
+            <e p="wood-877000.shader" t="Include" />
+            <e p="wood-877365.shader" t="Include" />
+            <e p="wood-938698.shader" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Assets/Editor" t="Include">
+        <e p="CamerasManager_Editor.cs" t="Include" />
+        <e p="GLDebug.cs" t="Include" />
+        <e p="NewSurfaceShader 1.shader" t="Include" />
+        <e p="NewSurfaceShader 2.shader" t="Include" />
+        <e p="PeopleEditorGenerator_Editor.cs" t="Include" />
+        <e p="RectangularSource_Editor.cs" t="Include" />
+      </e>
+      <e p="Assets/FFmpegOut" t="Include">
+        <e p="CameraCapture.cs" t="Include" />
+        <e p="Editor" t="Include">
+          <e p="CameraCaptureEditor.cs" t="Include" />
+        </e>
+        <e p="FFmpegConfig.cs" t="Include" />
+        <e p="FFmpegPipe.cs" t="Include" />
+        <e p="Internal" t="Include">
+          <e p="Blitter.cs" t="Include" />
+          <e p="Shader" t="Include">
+            <e p="CameraCapture.shader" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Assets/Grid.cs" t="Include" />
+      <e p="Assets/PeopleSources" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="RectangularSource.cs" t="Include" />
+          <e p="SourceController.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Assets/Person" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="Group.cs" t="Include" />
+          <e p="IDGenerator.cs" t="Include" />
+          <e p="PeopleEditorGenerator.cs" t="Include" />
+          <e p="Person.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Assets/Scripts" t="Include">
+        <e p="CameraControllerFOV.cs" t="Include" />
+        <e p="DroneCameraController.cs" t="Include" />
+        <e p="greedy_drone.cs" t="Include" />
+        <e p="Greedy_PTZ.cs" t="Include" />
+        <e p="GridController.cs" t="Include" />
+        <e p="isVisible.cs" t="Include" />
+        <e p="MapController.cs" t="Include" />
+        <e p="mission.txt" t="Include" />
+        <e p="MovementDrone.cs" t="Include" />
+        <e p="Namespaces.cs" t="Include" />
+        <e p="ParametersSetting.txt" t="Include" />
+        <e p="POI.txt" t="Include" />
+        <e p="README.txt" t="Include" />
+      </e>
+      <e p="Assets/UI" t="Include">
+        <e p="CameraControllerPTZ.cs" t="Include" />
+        <e p="MouseDrag.cs" t="Include" />
+        <e p="SimController.cs" t="Include" />
+      </e>
+      <e p="Assets/UMA" t="Include">
+        <e p="Content" t="Include">
+          <e p="UMA_Contrib" t="Include">
+            <e p="Readme_Contrib.txt" t="Include" />
+          </e>
+          <e p="UMA_Core" t="Include">
+            <e p="HumanFemale" t="Include">
+              <e p="DNA" t="Include">
+                <e p="HumanFemaleDNAConverterBehaviour.cs" t="Include" />
+              </e>
+            </e>
+            <e p="HumanMale" t="Include">
+              <e p="DNA" t="Include">
+                <e p="HumanMaleDNAConverterBehaviour.cs" t="Include" />
+              </e>
+            </e>
+            <e p="HumanShared" t="Include">
+              <e p="DNA" t="Include">
+                <e p="HumanoidDNAConverterBehaviour.cs" t="Include" />
+                <e p="TutorialDNAConverterBehaviour.cs" t="Include" />
+                <e p="UMADna.cs" t="Include" />
+                <e p="UMADna_Generated.cs" t="Include" />
+                <e p="UMADnaHumanoid.cs" t="Include" />
+                <e p="UMADnaHumanoid_Generated.cs" t="Include" />
+                <e p="UMADnaTutorial.cs" t="Include" />
+                <e p="UMADnaTutorial_Generated.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Core" t="Include">
+          <e p="Extensions" t="Include">
+            <e p="DynamicCharacterSystem" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="AssetItem.cs" t="Include" />
+                <e p="DownloadingAssetItem.cs" t="Include" />
+                <e p="DownloadingAssetsList.cs" t="Include" />
+                <e p="DynamicAssetLoader.cs" t="Include" />
+                <e p="DynamicCharacterAvatar.cs" t="Include" />
+                <e p="DynamicCharacterSystem.cs" t="Include" />
+                <e p="DynamicDNAConverterBehaviour.cs" t="Include" />
+                <e p="DynamicDNAConverterCustomizer.cs" t="Include" />
+                <e p="DynamicOverlayLibrary.cs" t="Include" />
+                <e p="DynamicRaceLibrary.cs" t="Include" />
+                <e p="DynamicSlotLibrary.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="DynamicAssetLoaderEditor.cs" t="Include" />
+                  <e p="DynamicCharacterAvatarEditor.cs" t="Include" />
+                  <e p="DynamicCharacterSystemEditor.cs" t="Include" />
+                  <e p="DynamicDNAConverterBehaviourEditor.cs" t="Include" />
+                  <e p="DynamicDnaConverterCustomizerEditor.cs" t="Include" />
+                  <e p="DynamicOverlayLibraryEditor.cs" t="Include" />
+                  <e p="DynamicRaceLibraryEditor.cs" t="Include" />
+                  <e p="DynamicSlotLibraryEditor.cs" t="Include" />
+                  <e p="DynamicUMADnaAssetEditor.cs" t="Include" />
+                  <e p="pDCSRecipeEditor.cs" t="Include" />
+                  <e p="pTextRecipeEditor.cs" t="Include" />
+                  <e p="pWardrobeRecipeEditor.cs" t="Include" />
+                  <e p="RaceAnimatorListPropertyDrawer.cs" t="Include" />
+                  <e p="RaceSetterPropertyDrawer.cs" t="Include" />
+                  <e p="RecipeEditor.cs" t="Include" />
+                  <e p="SkeletonModifierPropertyDrawer.cs" t="Include" />
+                  <e p="UMAAssetIndexerEditor.cs" t="Include" />
+                  <e p="UMADynamicCharacterAvatarRecipeEditor.cs" t="Include" />
+                  <e p="UMAWardrobeCollectionEditor.cs" t="Include" />
+                  <e p="UMAWardrobeRecipeEditor.cs" t="Include" />
+                  <e p="WardrobeRecipeListPropertyDrawer.cs" t="Include" />
+                </e>
+                <e p="pAssetBundleIndex.cs" t="Include" />
+                <e p="pUMATextRecipe.cs" t="Include" />
+                <e p="UMAAssetIndexer.cs" t="Include" />
+                <e p="UMAAssetModificationProcessor.cs" t="Include" />
+                <e p="UMADynamicCharacterAvatarRecipe.cs" t="Include" />
+                <e p="UMAWardrobeCollection.cs" t="Include" />
+                <e p="UMAWardrobeRecipe.cs" t="Include" />
+              </e>
+              <e p="UMAAssetBundleManager" t="Include">
+                <e p="AssetBundleIndex.cs" t="Include" />
+                <e p="AssetBundleLoadOperation.cs" t="Include" />
+                <e p="AssetBundleManager.cs" t="Include" />
+                <e p="BuildScript.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="AssetbundlesMenuItems.cs" t="Include" />
+                </e>
+                <e p="EncryptionUtility.cs" t="Include" />
+                <e p="GUI" t="Include">
+                  <e p="AssetBundleLoadingIndicator.cs" t="Include" />
+                  <e p="Editor" t="Include">
+                    <e p="ReadOnlyDrawer.cs" t="Include" />
+                  </e>
+                  <e p="ReadOnlyAttribute.cs" t="Include" />
+                </e>
+                <e p="UMAAssetBundleManagerSettings.cs" t="Include" />
+                <e p="UMAEncryptedBundle.cs" t="Include" />
+                <e p="Utility.cs" t="Include" />
+                <e p="WebServer.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Scripts" t="Include">
+            <e p="Editor" t="Include">
+              <e p="OverlayLibraryEditor.cs" t="Include" />
+              <e p="SharedColorTableEditor.cs" t="Include" />
+              <e p="SlotLibraryEditor.cs" t="Include" />
+              <e p="Templates" t="Include">
+                <e p="UmaDna_GetNames_Fragment.cs.txt" t="Include" />
+                <e p="UmaDna_GetType_Fragment.cs.txt" t="Include" />
+                <e p="UmaDna_GetTypes_Fragment.cs.txt" t="Include" />
+                <e p="UmaDna_Load_Fragment.cs.txt" t="Include" />
+                <e p="UmaDna_Save_Fragment.cs.txt" t="Include" />
+                <e p="UmaDna_Template.cs.txt" t="Include" />
+                <e p="UmaDnaChild_Byte_Fields_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_Byte_FromDna_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_Byte_ToDna_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_GetIndex_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_GetNames_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_GetValue_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_SetIndex_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_SetValue_Fragment.cs.txt" t="Include" />
+                <e p="UmaDnaChild_Template.cs.txt" t="Include" />
+              </e>
+              <e p="UMAAvatarLoadSaveMenuItems.cs" t="Include" />
+            </e>
+            <e p="OverlayLibrary.cs" t="Include" />
+            <e p="RaceLibrary.cs" t="Include" />
+            <e p="SharedColorTable.cs" t="Include" />
+            <e p="SkeletonTools.cs" t="Include" />
+            <e p="SlotLibrary.cs" t="Include" />
+            <e p="UMAPackedRecipeBase.cs" t="Include" />
+            <e p="UMATextRecipe.cs" t="Include" />
+          </e>
+          <e p="StandardAssets" t="Include">
+            <e p="Extensions" t="Include">
+              <e p="DynamicCharacterSystem" t="Include">
+                <e p="Scripts" t="Include">
+                  <e p="DCSStandardTypes.cs" t="Include" />
+                  <e p="DynamicCharacterSystemBase.cs" t="Include" />
+                  <e p="Editor" t="Include">
+                    <e p="EnumFlagsAttributeDrawer.cs" t="Include" />
+                    <e p="pRaceInspector.cs" t="Include" />
+                  </e>
+                  <e p="EnumExtensions.cs" t="Include" />
+                  <e p="EnumFlagsAttribute.cs" t="Include" />
+                  <e p="ExtensionMethods.cs" t="Include" />
+                  <e p="pRaceData.cs" t="Include" />
+                  <e p="pUMAContext.cs" t="Include" />
+                  <e p="UMAExtendedAvatar.cs" t="Include" />
+                </e>
+              </e>
+              <e p="UMAPhysics" t="Include">
+                <e p="ColliderDefinition.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="UMAPhysicsAvatarEditor.cs" t="Include" />
+                  <e p="UMAPhysicsElementEditor.cs" t="Include" />
+                </e>
+                <e p="UMAPhysicsAvatar.cs" t="Include" />
+                <e p="UMAPhysicsElement.cs" t="Include" />
+              </e>
+            </e>
+            <e p="UMA" t="Include">
+              <e p="Atlas" t="Include">
+                <e p="AtlasCutoutShader.shader" t="Include" />
+                <e p="AtlasDiffuseShader.shader" t="Include" />
+                <e p="AtlasNormalShader.shader" t="Include" />
+                <e p="AtlasShader.shader" t="Include" />
+              </e>
+              <e p="Scripts" t="Include">
+                <e p="CustomAssetUtility.cs" t="Include" />
+                <e p="DnaConverterBehaviour.cs" t="Include" />
+                <e p="DNARangeAsset.cs" t="Include" />
+                <e p="DynamicDNAConverterBehaviourBase.cs" t="Include" />
+                <e p="DynamicUMADna.cs" t="Include" />
+                <e p="DynamicUMADnaAsset.cs" t="Include" />
+                <e p="DynamicUMADnaBase.cs" t="Include" />
+                <e p="Editor" t="Include">
+                  <e p="CharacterBaseEditor.cs" t="Include" />
+                  <e p="CodeGenTemplate.cs" t="Include" />
+                  <e p="CreateCleanAnimationMenu.cs" t="Include" />
+                  <e p="DictionaryCustomFormatter.cs" t="Include" />
+                  <e p="DNARangeInspector.cs" t="Include" />
+                  <e p="ExpressionPlayerInspector.cs" t="Include" />
+                  <e p="GUIHelper.cs" t="Include" />
+                  <e p="Integrations" t="Include">
+                    <e p="PowerToolsIntegration" t="Include">
+                      <e p="UMALODConversionSetEditor.cs" t="Include" />
+                    </e>
+                  </e>
+                  <e p="OverlayColorDataPropertyDrawer.cs" t="Include" />
+                  <e p="OverlayDataAssetInspector.cs" t="Include" />
+                  <e p="OverlayInspector.cs" t="Include" />
+                  <e p="RaceInspector.cs" t="Include" />
+                  <e p="SlotDataAssetInspector.cs" t="Include" />
+                  <e p="TPoseExtracter.cs" t="Include" />
+                  <e p="UMAAssetCollectionEditor.cs" t="Include" />
+                  <e p="UMABonePoseBuildWindow.cs" t="Include" />
+                  <e p="UMABonePoseEditor.cs" t="Include" />
+                  <e p="UMABonePoseEditorContext.cs" t="Include" />
+                  <e p="UMABonePoseMixerWindow.cs" t="Include" />
+                  <e p="UMAClothPropertiesInspector.cs" t="Include" />
+                  <e p="UMADataEditor.cs" t="Include" />
+                  <e p="UMADNAHelperTools.cs" t="Include" />
+                  <e p="UMADNAToBonePoseWindow.cs" t="Include" />
+                  <e p="UMAExpressionSetInspector.cs" t="Include" />
+                  <e p="UMAGeneratorBuiltinEditor.cs" t="Include" />
+                  <e p="UMAObjExporter.cs" t="Include" />
+                  <e p="UmaSlotBuilderWindow.cs" t="Include" />
+                  <e p="UMASlotProcessingUtil.cs" t="Include" />
+                </e>
+                <e p="ExpressionPlayer.cs" t="Include" />
+                <e p="FileUtils.cs" t="Include" />
+                <e p="INameProvider.cs" t="Include" />
+                <e p="Integrations" t="Include">
+                  <e p="PowerToolsIntegration" t="Include">
+                    <e p="PowerToolsIntegration.cs" t="Include" />
+                    <e p="UMALODConversionEntry.cs" t="Include" />
+                    <e p="UMALODConversionSet.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="MaxRectsBinPack.cs" t="Include" />
+                <e p="MorphSetDnaAsset.cs" t="Include" />
+                <e p="MorphSetDnaConverterBehaviour.cs" t="Include" />
+                <e p="OverlayColorData.cs" t="Include" />
+                <e p="OverlayData.cs" t="Include" />
+                <e p="OverlayDataAsset.cs" t="Include" />
+                <e p="OverlayLibraryBase.cs" t="Include" />
+                <e p="RaceData.cs" t="Include" />
+                <e p="RaceLibraryBase.cs" t="Include" />
+                <e p="SeamRemoval.cs" t="Include" />
+                <e p="SkinnedMeshAligner.cs" t="Include" />
+                <e p="SkinnedMeshCombiner.cs" t="Include" />
+                <e p="SlotData.cs" t="Include" />
+                <e p="SlotDataAsset.cs" t="Include" />
+                <e p="SlotLibraryBase.cs" t="Include" />
+                <e p="TextureMerge.cs" t="Include" />
+                <e p="TextureProcessBaseCoroutine.cs" t="Include" />
+                <e p="TextureProcessPROCoroutine.cs" t="Include" />
+                <e p="TwistBones.cs" t="Include" />
+                <e p="UMAAssetCollection.cs" t="Include" />
+                <e p="UMAAssetFieldVisible.cs" t="Include" />
+                <e p="UMAAvatarBase.cs" t="Include" />
+                <e p="UMABonePose.cs" t="Include" />
+                <e p="UMAClothProperties.cs" t="Include" />
+                <e p="UMAContext.cs" t="Include" />
+                <e p="UMAData.cs" t="Include" />
+                <e p="UMADefaultMeshCombiner.cs" t="Include" />
+                <e p="UMADnaBase.cs" t="Include" />
+                <e p="UMADynamicAvatar.cs" t="Include" />
+                <e p="UMAEvents.cs" t="Include" />
+                <e p="UMAExpressionPlayer.cs" t="Include" />
+                <e p="UMAExpressionSet.cs" t="Include" />
+                <e p="UMAGenerator.cs" t="Include" />
+                <e p="UMAGeneratorBase.cs" t="Include" />
+                <e p="UMAGeneratorBuiltin.cs" t="Include" />
+                <e p="UMAGeneratorCoroutine.cs" t="Include" />
+                <e p="UMAMaterial.cs" t="Include" />
+                <e p="UMAMeshCombiner.cs" t="Include" />
+                <e p="UMAMeshData.cs" t="Include" />
+                <e p="UMARecipeBase.cs" t="Include" />
+                <e p="UMARenderTextureManager.cs" t="Include" />
+                <e p="UMAResourceNotFoundException.cs" t="Include" />
+                <e p="UMASkeleton.cs" t="Include" />
+                <e p="UMATime.cs" t="Include" />
+                <e p="UmaTPose.cs" t="Include" />
+                <e p="UMAUtils.cs" t="Include" />
+                <e p="WorkerCoroutine.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Examples" t="Include">
+          <e p="Blendshape Examples" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="BlendShapeDnaSlider.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Expressions Examples" t="Include">
+            <e p="Scenes" t="Include">
+              <e p="Editing Expression Clips.txt" t="Include" />
+            </e>
+            <e p="Scripts" t="Include">
+              <e p="ActiveObjectSwitcher.cs" t="Include" />
+              <e p="EditModeExpressionPreview.cs" t="Include" />
+              <e p="SliderExpressionTest.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Extensions Examples" t="Include">
+            <e p="DynamicCharacterSystem" t="Include">
+              <e p="Assets" t="Include">
+                <e p="DemoAssetBundles" t="Include">
+                  <e p="Werewolf" t="Include">
+                    <e p="Wardrobe1" t="Include">
+                      <e p="ProTip-README.txt" t="Include" />
+                    </e>
+                  </e>
+                </e>
+                <e p="PhotoBooth" t="Include">
+                  <e p="PhotoboothREADME.txt" t="Include" />
+                </e>
+                <e p="Resources" t="Include">
+                  <e p="CharacterRecipes" t="Include">
+                    <e p="Bob.txt" t="Include" />
+                    <e p="Fram.txt" t="Include" />
+                    <e p="Gobs.txt" t="Include" />
+                    <e p="HandsGuy.txt" t="Include" />
+                    <e p="HumanFemaleDancer1.txt" t="Include" />
+                    <e p="HumanFemalePixi.txt" t="Include" />
+                    <e p="HumanMale1.txt" t="Include" />
+                    <e p="HumanMale2.txt" t="Include" />
+                    <e p="HumanMaleChallenger.txt" t="Include" />
+                    <e p="HumanMaleRoyalChallenger.txt" t="Include" />
+                    <e p="ToonBigAndFat.txt" t="Include" />
+                    <e p="ToonFemaleDancer1c.txt" t="Include" />
+                    <e p="ToonFemaleStarDancer1c.txt" t="Include" />
+                    <e p="Troll1c.txt" t="Include" />
+                    <e p="WerewolfCamp1.txt" t="Include" />
+                    <e p="WerewolfClothed1.txt" t="Include" />
+                  </e>
+                  <e p="Scene1" t="Include">
+                    <e p="AvailableColorsHandler.cs" t="Include" />
+                    <e p="ColorHandler.cs" t="Include" />
+                    <e p="DNAHandler.cs" t="Include" />
+                    <e p="DNASliderHandler.cs" t="Include" />
+                    <e p="SampleCode.cs" t="Include" />
+                    <e p="SlotHandler.cs" t="Include" />
+                    <e p="WardrobeHandler.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="Scripts" t="Include">
+                <e p="DNADelegatesExample.cs" t="Include" />
+                <e p="DNAEditor.cs" t="Include" />
+                <e p="DNAPanel.cs" t="Include" />
+                <e p="Scene2and3" t="Include">
+                  <e p="BtnGetAssetBundle.cs" t="Include" />
+                  <e p="BtnGetUMAAsset.cs" t="Include" />
+                  <e p="CSColorChangerDD.cs" t="Include" />
+                  <e p="CSLoadableItem.cs" t="Include" />
+                  <e p="CSWardrobeSlotChangerDD.cs" t="Include" />
+                  <e p="DropdownWithColor.cs" t="Include" />
+                  <e p="LogToText.cs" t="Include" />
+                  <e p="MyListPool.cs" t="Include" />
+                  <e p="MyObjectPool.cs" t="Include" />
+                  <e p="TestCustomizerDD.cs" t="Include" />
+                  <e p="WardrobeCollectionDemoBtn.cs" t="Include" />
+                  <e p="WardrobeCollectionDemoUI.cs" t="Include" />
+                  <e p="WardrobeCollectionLibrary.cs" t="Include" />
+                </e>
+                <e p="Scene4" t="Include">
+                  <e p="Editor" t="Include">
+                    <e p="PhotoBoothInspector.cs" t="Include" />
+                  </e>
+                  <e p="PhotoBooth.cs" t="Include" />
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="Main Examples" t="Include">
+            <e p="Assets" t="Include">
+              <e p="AdditionalSlots" t="Include">
+                <e p="CapsuleCollider" t="Include">
+                  <e p="CapsuleColliderSlotScript.cs" t="Include" />
+                </e>
+                <e p="Expressions" t="Include">
+                  <e p="ExpressionSlotScript.cs" t="Include" />
+                </e>
+                <e p="FinalIK" t="Include">
+                  <e p="BipedIKSlotScript.cs" t="Include" />
+                </e>
+                <e p="ForearmTwist" t="Include">
+                  <e p="ForearmTwistSlotScript.cs" t="Include" />
+                </e>
+                <e p="Locomotion" t="Include">
+                  <e p="LocomotionSlotScript.cs" t="Include" />
+                </e>
+                <e p="Physics" t="Include">
+                  <e p="UMAPhysicsSlotDefinition.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Fonts" t="Include">
+                <e p="Tuffy Font LICENSE.txt" t="Include" />
+              </e>
+              <e p="Shaders" t="Include">
+                <e p="Debug_Normals.shader" t="Include" />
+                <e p="Debug_Tangents.shader" t="Include" />
+                <e p="HairFadeCutout.shader" t="Include" />
+                <e p="HairFadeCutout2.shader" t="Include" />
+                <e p="HairFadeCutoutSS.shader" t="Include" />
+              </e>
+              <e p="Textures" t="Include">
+                <e p="Skyboxes" t="Include">
+                  <e p="NoEmotion" t="Include">
+                    <e p="NoEmotionHDRs.txt" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="Scenes" t="Include">
+              <e p="ReadMe - Networking Demo.txt" t="Include" />
+            </e>
+            <e p="Scripts" t="Include">
+              <e p="BRDFLookupTexture.cs" t="Include" />
+              <e p="CameraTrack.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="BRDFLookupTextureInspector.cs" t="Include" />
+                <e p="EnvPresetChooserEd.cs" t="Include" />
+              </e>
+              <e p="EnvPreset.cs" t="Include" />
+              <e p="EnvPresetChooser.cs" t="Include" />
+              <e p="EnvPresetSwitch.cs" t="Include" />
+              <e p="HUDFPS.cs" t="Include" />
+              <e p="Locomotion.cs" t="Include" />
+              <e p="MenuScript.cs" t="Include" />
+              <e p="MouseOrbitImproved.cs" t="Include" />
+              <e p="PlayerController.cs" t="Include" />
+              <e p="PlayerSetup.cs" t="Include" />
+              <e p="SceneWalker.cs" t="Include" />
+              <e p="UMACharacterCustomization.cs" t="Include" />
+              <e p="UMACrowd.cs" t="Include" />
+              <e p="UMACrowdRandomSet.cs" t="Include" />
+              <e p="UMACustomization.cs" t="Include" />
+              <e p="UMALODDemoScript.cs" t="Include" />
+              <e p="UMARecipeCrowd.cs" t="Include" />
+              <e p="UMARecipeMixer.cs" t="Include" />
+              <e p="UMARemoveComponents.cs" t="Include" />
+              <e p="UMASimpleLOD.cs" t="Include" />
+              <e p="UMASlotVerifyWizard.cs" t="Include" />
+              <e p="UMATestEventsScript.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Physics Examples" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="ClothAccelerationPanelScript.cs" t="Include" />
+              <e p="ClothHelper.cs" t="Include" />
+              <e p="CollisionMatrixFixer.cs" t="Include" />
+              <e p="CursorLock.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="ClothHelperEditor.cs" t="Include" />
+                <e p="UMAPhysicsSlotEditor.cs" t="Include" />
+              </e>
+              <e p="FPSWalkerEnhanced.cs" t="Include" />
+              <e p="SmoothMouseLook.cs" t="Include" />
+              <e p="UMAShooter.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="InternalDataStore" t="Include">
+          <e p="AssetVersion.xml" t="Include" />
+          <e p="InEditor" t="Include">
+            <e p="UMAEncryptionSettings-DoNotDelete.txt" t="Include" />
+          </e>
+          <e p="InGame" t="Include">
+            <e p="Resources" t="Include">
+              <e p="PlaceholderAssets" t="Include">
+                <e p="PlaceholderAssetsREADME.txt" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="HeterogenousCameraNetwork.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Temp/bin" t="ExcludeRecursive" />
+    </e>
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2019.2/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_HeterogenousCameraNetwork.-1133628296.00" t="ExcludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+  </component>
+</project>
