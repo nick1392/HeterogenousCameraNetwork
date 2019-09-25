@@ -24,6 +24,9 @@ public class RectangularSource : MonoBehaviour
     public float minTime = 0.5f, maxTime = 2.0f;
 
     public List<TargetType> targetList = new List<TargetType>();
+    private int frameRate;
+
+    private Transform peopleTransform;
 
     // Use this for initialization
     void Start()
@@ -37,6 +40,8 @@ public class RectangularSource : MonoBehaviour
         groupSizeProbability[3] = coef * Mathf.Pow(var, 4) / (24 * (1 - coef));
         groupSizeProbability[4] = coef * Mathf.Pow(var, 5) / (120 * (1 - coef));
         groupSizeProbability[5] = coef * Mathf.Pow(var, 6) / (720 * (1 - coef));
+        frameRate = GameObject.Find("CamerasManager").GetComponent<CamerasManager>().frameRate;
+        peopleTransform = GameObject.Find("People").transform;
     }
 
     // Update is called once per frame
@@ -46,7 +51,7 @@ public class RectangularSource : MonoBehaviour
         nextGeneration--;
         if (nextGeneration < 0 && targetList.Count > 0)
         {
-            nextGeneration = (int)Random.Range(minTime * GameObject.Find("CamerasManager").GetComponent<CamerasManager>().frameRate, maxTime * GameObject.Find("CamerasManager").GetComponent<CamerasManager>().frameRate);
+            nextGeneration = (int)Random.Range(minTime * frameRate, maxTime * frameRate);
 
             float randomTarget = Random.value;
             float probability = 0.0f;
@@ -81,27 +86,24 @@ public class RectangularSource : MonoBehaviour
                     if (i == 0)
                     {
                         GameObject person = new GameObject("Person");
-                        person.transform.parent = GameObject.Find("People").transform;
+                        person.transform.SetParent(peopleTransform);
                         person.transform.position = GenerationPoint;
-                        person.AddComponent<Person>();
-                        Person script = person.GetComponent<Person>();
+                        Person script = person.AddComponent<Person>();
                         script.target = target;
                         script.destroyAtDestinantion = destroy;
-                        person.AddComponent<CapsuleCollider>();
-                        CapsuleCollider personCollider = person.GetComponent<CapsuleCollider>();
+                        CapsuleCollider personCollider = person.AddComponent<CapsuleCollider>();
                         personCollider.center = new Vector3(0, 1, 0);
                         personCollider.direction = 1;
                         personCollider.height = 2.184f;
                         personCollider.radius = 0.5f;
-                        GameObject sel = Instantiate<GameObject>(selection);
-                        sel.transform.parent = person.transform;
+                        GameObject sel = Instantiate<GameObject>(selection, person.transform, true);
                         sel.transform.position = new Vector3(GenerationPoint.x, 0.01f, GenerationPoint.z);
                         GenerateUMA(person);
                     }
                     else
                     {
                         GameObject Group = new GameObject(string.Format("Group_{0}p", i + 1));
-                        Group.transform.parent = GameObject.Find("People").transform;
+                        Group.transform.parent = peopleTransform;
                         Group.tag = "Group";
                         Group.AddComponent<Group>();
 
@@ -110,18 +112,15 @@ public class RectangularSource : MonoBehaviour
                             GameObject Person = new GameObject("Person");
                             Person.transform.parent = Group.transform;
                             Person.transform.position = GenerationPoint;
-                            Person.AddComponent<Person>();
-                            Person script = Person.GetComponent<Person>();
+                            Person script = Person.AddComponent<Person>();
                             script.target = target;
                             script.destroyAtDestinantion = destroy;
-                            Person.AddComponent<CapsuleCollider>();
-                            CapsuleCollider personCollider = Person.GetComponent<CapsuleCollider>();
+                            CapsuleCollider personCollider = Person.AddComponent<CapsuleCollider>();
                             personCollider.center = new Vector3(0, 1, 0);
                             personCollider.direction = 1;
                             personCollider.height = 2.184f;
                             personCollider.radius = 0.5f;
-                            GameObject sel = Instantiate<GameObject>(selection);
-                            sel.transform.parent = Person.transform;
+                            GameObject sel = Instantiate<GameObject>(selection, Person.transform, true);
                             sel.transform.position = new Vector3(GenerationPoint.x, 0.01f, GenerationPoint.z);
                             GenerateUMA(Person);
                         }
