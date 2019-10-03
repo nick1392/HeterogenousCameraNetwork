@@ -1,5 +1,7 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace UMA
 {
@@ -18,6 +20,16 @@ namespace UMA
 		/// </summary>
 		public float overlayScale = 1.0f;
 		/// <summary>
+		/// 
+		/// </summary>
+		public bool useAtlasOverlay
+		{
+			get
+			{
+				return	asset.useAtlasOverlay;
+			}
+		}
+		/// <summary>
 		/// When serializing this recipe should this slot be skipped, useful for scene specific "additional slots"
 		/// </summary>
 		public bool dontSerialize;
@@ -27,6 +39,12 @@ namespace UMA
 		/// </summary>
 		private List<OverlayData> overlayList = new List<OverlayData>();
 
+		//For MeshHide system, this can get added at runtime and is the filtered HideMask that the combiner uses.
+		public BitArray[] meshHideMask;
+
+		//Mutable version pulled off the immutable asset.  This is so we can modify it at runtime if needed.
+		public UMARendererAsset rendererAsset;
+
 		/// <summary>
 		/// Constructor for slot using the given asset.
 		/// </summary>
@@ -35,7 +53,19 @@ namespace UMA
 		{
 			this.asset = asset;
 			overlayScale = asset.overlayScale;
+			rendererAsset = asset.RendererAsset;
 		}
+
+        /// <summary>
+        /// Property to return overlay hash so it is visible in debugger.
+        /// </summary>
+        public int OverlayHash
+        {
+            get
+            {
+                return GetOverlayList().GetHashCode();
+            }
+        }
 
 		/// <summary>
 		/// Deep copy of the SlotData.
@@ -176,6 +206,16 @@ namespace UMA
 		/// <param name="newOverlayList">The overlay list.</param>
 		public void SetOverlayList(List<OverlayData> newOverlayList)
 		{
+                this.overlayList = newOverlayList;
+		}
+
+        /// <summary>
+        /// Sets the complete list of overlays.
+        /// Reuses the overlay list if it exists.
+        /// </summary>
+        /// <param name="newOverlayList">The overlay list.</param>
+        public void UpdateOverlayList(List<OverlayData> newOverlayList)
+        {
             if (this.overlayList.Count == newOverlayList.Count)
             {
                 // keep the list, and just set the overlays so that merging continues to work.
@@ -216,14 +256,16 @@ namespace UMA
 			{
 				if (asset.material == null)
 				{
-					Debug.LogError(string.Format("Slot '{0}' has a mesh but no material.", asset.slotName), asset);
+					if (Debug.isDebugBuild)
+						Debug.LogError(string.Format("Slot '{0}' has a mesh but no material.", asset.slotName), asset);
 					valid = false;
 				}
 				else
 				{
 					if (asset.material.material == null)
 					{
-						Debug.LogError(string.Format("Slot '{0}' has an umaMaterial without a material assigned.", asset.slotName), asset);
+						if (Debug.isDebugBuild)
+							Debug.LogError(string.Format("Slot '{0}' has an umaMaterial without a material assigned.", asset.slotName), asset);
 						valid = false;
 					}
 					else
@@ -233,7 +275,8 @@ namespace UMA
 							var channel = asset.material.channels[i];
 							if (!asset.material.material.HasProperty(channel.materialPropertyName))
 							{
-								Debug.LogError(string.Format("Slot '{0}' Material Channel {1} refers to material property '{2}' but no such property exists.", asset.slotName, i, channel.materialPropertyName), asset);
+								if (Debug.isDebugBuild)
+									Debug.LogError(string.Format("Slot '{0}' Material Channel {1} refers to material property '{2}' but no such property exists.", asset.slotName, i, channel.materialPropertyName), asset);
 								valid = false;
 							}
 						}
@@ -247,7 +290,8 @@ namespace UMA
 						if (!overlayData.Validate(asset.material, (i == 0)))
 						{
 							valid = false;
-							Debug.LogError(string.Format("Invalid Overlay '{0}' on Slot '{1}'.", overlayData.overlayName, asset.slotName));
+							if (Debug.isDebugBuild)
+								Debug.LogError(string.Format("Invalid Overlay '{0}' on Slot '{1}'.", overlayData.overlayName, asset.slotName));
 						}
 					}
 				}
@@ -261,7 +305,8 @@ namespace UMA
 						var channel = asset.material.channels[i];
 						if (!asset.material.material.HasProperty(channel.materialPropertyName))
 						{
-							Debug.LogError(string.Format("Slot '{0}' Material Channel {1} refers to material property '{2}' but no such property exists.", asset.slotName, i, channel.materialPropertyName), asset);
+							if (Debug.isDebugBuild)
+								Debug.LogError(string.Format("Slot '{0}' Material Channel {1} refers to material property '{2}' but no such property exists.", asset.slotName, i, channel.materialPropertyName), asset);
 							valid = false;
 						}
 					}
@@ -326,7 +371,8 @@ namespace UMA
 
 		public void OnAfterDeserialize()
 		{
-			if (overlayList == null) overlayList = new List<OverlayData>();
+			if (overlayList == null)
+                overlayList = new List<OverlayData>();
 		}
 
 		public void OnBeforeSerialize()

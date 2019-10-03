@@ -8,11 +8,17 @@ namespace UMA
     /// </summary>
     public class UMAMaterial : ScriptableObject
     {
+        public enum CompressionSettings { None, Fast, HighQuality };
         public Material material;
         public MaterialType materialType = MaterialType.Atlas;
         public MaterialChannel[] channels;
-        public UMAClothProperties clothProperties;
-        public bool RequireSeperateRenderer;
+
+        [Range(-2.0f, 2.0f)]
+        public float MipMapBias = 0.0f;
+        [Range(1, 16)]
+        public int AnisoLevel = 1;
+        public FilterMode MatFilterMode = FilterMode.Bilinear;
+        public CompressionSettings Compression = CompressionSettings.None;
 
         public enum MaterialType
         {
@@ -29,6 +35,22 @@ namespace UMA
             DiffuseTexture = 4,
         }
 
+		static public Color GetBackgroundColor(ChannelType channelType)
+		{
+			return ChannelBackground[(int)channelType];
+		}
+
+		//The ChannelTypes index into this for it's corresponding background color.
+		//Needed to have normalMaps have a grey background for proper blending
+		static Color[] ChannelBackground =
+		{
+			new Color(0,0,0,0),
+			Color.grey,
+			new Color(0,0,0,0),
+			new Color(0,0,0,0),
+			new Color(0,0,0,0)
+		};
+
         [Serializable]
         public struct MaterialChannel
         {
@@ -36,6 +58,10 @@ namespace UMA
             public RenderTextureFormat textureFormat;
             public string materialPropertyName;
 			public string sourceTextureName;
+            public CompressionSettings Compression;
+            [Range(0,4)]
+            public int DownSample;
+            public bool ConvertRenderTexture;
        }
 
 #if UNITY_EDITOR
@@ -51,7 +77,7 @@ namespace UMA
 		/// </summary>
 		public bool IsProcedural()
 		{
-            #if UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID || UNITY_PS4 || UNITY_XBOXONE //supported platforms for procedural materials
+			#if (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID || UNITY_PS4 || UNITY_XBOXONE) && !UNITY_2017_3_OR_NEWER //supported platforms for procedural materials
 			if ((material != null) && (material is ProceduralMaterial))
 				return true;
             #endif
@@ -74,6 +100,8 @@ namespace UMA
             }
             else
             {
+				if (this.material.name != material.material.name)
+					return false;
 				if (this.material.shader != material.material.shader)
 					return false;
                 if (this.material.renderQueue != material.material.renderQueue)
@@ -82,8 +110,6 @@ namespace UMA
 					return false;
 				if (this.channels.Length != material.channels.Length)
 					return false;
-                if (this.clothProperties != material.clothProperties)
-                    return false;
 				for (int i = 0; i < this.channels.Length; i++)
 				{
 					MaterialChannel thisChannel = this.channels[i];

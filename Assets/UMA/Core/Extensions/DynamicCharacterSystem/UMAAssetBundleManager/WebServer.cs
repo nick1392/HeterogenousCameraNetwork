@@ -43,7 +43,8 @@ namespace UMA.AssetBundles
                 _listener.Prefixes.Add(string.Format("http://*:{0}/", port));
             }
             catch {
-                Debug.LogWarning("[Web Server] Could not add prefix to listener");
+				if (Debug.isDebugBuild)
+					Debug.LogWarning("[Web Server] Could not add prefix to listener");
             }
             _listener.Start();
             _listener.BeginGetContext(OnGetContext, null);
@@ -69,7 +70,8 @@ namespace UMA.AssetBundles
             {
                 if (context.Request.RawUrl == "/")
                 {
-                    Debug.Log("[WebServer] context.Request.RawUrl");
+					//if (Debug.isDebugBuild)//isDebugBuild can only be called from the main thread
+					Debug.Log("[WebServer] context.Request.RawUrl");
                     context.Response.StatusCode = 200;
                     var process = System.Diagnostics.Process.GetCurrentProcess();
                     string msg = string.Format(@"<html><body><h1>UMA Simple Web Server</h1><table>
@@ -99,7 +101,8 @@ namespace UMA.AssetBundles
                     else
                     {
                         context.Response.StatusCode = 404;
-                        UnityEngine.Debug.LogErrorFormat("Url not served. Have you built your Asset Bundles? Url not served from: {0} '{1}'", context.Request.RawUrl, filePath);
+                        //if (Debug.isDebugBuild)//isDebugBuild can only be called from the main thread
+                            UnityEngine.Debug.LogErrorFormat("Url not served. Have you built your Asset Bundles? Url not served from: {0} '{1}'", context.Request.RawUrl, filePath);
 #if UNITY_EDITOR
                         AssetBundleManager.SimulateOverride = true;
                         context.Response.OutputStream.Close();
@@ -120,17 +123,20 @@ namespace UMA.AssetBundles
             {
                 if (e.ErrorCode == -2147467259)
                 {
-                    // shutdown, terminate silently
-                    Debug.LogWarning("[Web Server] ErrorCode -2147467259: terminate silently");
+					// shutdown, terminate silently
+					//if (Debug.isDebugBuild)//isDebugBuild can only be called from the main thread
+					Debug.LogWarning("[Web Server] ErrorCode -2147467259: terminate silently");
                     context.Response.Abort();
                     return;
                 }
-                UnityEngine.Debug.LogException(e);
+				// if (Debug.isDebugBuild)//isDebugBuild can only be called from the main thread
+				UnityEngine.Debug.LogException(e);
                 context.Response.Abort();
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogException(e);
+				//if (Debug.isDebugBuild)//isDebugBuild can only be called from the main thread
+				UnityEngine.Debug.LogException(e);
                 context.Response.Abort();
             }
         }
@@ -166,25 +172,22 @@ namespace UMA.AssetBundles
         {
             if(_serverURL != "")
             {
-				//string serverResourcesDirectory = "Assets/UMA/Extensions/DynamicCharacterSystem/UMAAssetBundleManager/Resources";
-				//string serverUrlPath = Path.Combine(serverResourcesDirectory, "localServerURL.bytes");
-				// Directory.CreateDirectory(serverResourcesDirectory);
 				string serverUrlPath = Path.Combine(UMA.FileUtils.GetInternalDataStoreFolder(false, false), "localServerURL.bytes");
 				UMA.FileUtils.WriteAllText(serverUrlPath, _serverURL);
-                AssetDatabase.Refresh();
+				AssetDatabase.Refresh();
             }
         }
         //but we dont want it hanging around afterwards
         public static void DestroyServerURLFile()
         {
-			//string serverResourcesDirectory = "Assets/UMA/Extensions/DynamicCharacterSystem/UMAAssetBundleManager/Resources";
-			//string serverUrlPath = Path.Combine(serverResourcesDirectory, "localServerURL.bytes");
 			string serverUrlPath = Path.Combine(UMA.FileUtils.GetInternalDataStoreFolder(false, false), "localServerURL.bytes");
+			string serverUrlMetaPath = Path.Combine(UMA.FileUtils.GetInternalDataStoreFolder(false, false), "localServerURL.bytes.meta");
+			File.Delete(serverUrlMetaPath);
 			File.Delete(serverUrlPath);
-            AssetDatabase.Refresh();
-        }
+			AssetDatabase.Refresh();
+		}
 #endif
-        //because in the editor we dont want this to return anything
+        //because in the editor we dont want this to set anything
         static void GetServerURL()
         {
             TextAsset urlFile = Resources.Load("localServerURL") as TextAsset;

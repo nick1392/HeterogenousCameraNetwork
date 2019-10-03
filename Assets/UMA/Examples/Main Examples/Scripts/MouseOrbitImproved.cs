@@ -37,8 +37,11 @@ namespace UMA.Examples
 
 
         public bool Clip;
-        public string TargetBone;
+        public enum targetOpts {  Head, Chest, Spine, Hips, LeftFoot, LeftHand, LeftLowerArm, LeftLowerLeg, LeftShoulder, LeftUpperArm, LeftUpperLeg, RightFoot, RightHand, RightLowerArm, RightLowerLeg, RightShoulder, RightUpperArm, RightUpperLeg }
+        public targetOpts TargetBone;
 
+        private string[] targetStrings = { "Head", "Chest", "Spine", "Hips", "LeftFoot", "LeftHand", "LeftLowerArm", "LeftLowerLeg", "LeftShoulder", "LeftUpperArm", "LeftUpperLeg", "RightFoot", "RightHand", "RightLowerArm", "RightLowerLeg", "RightShoulder", "RightUpperArm", "RightUpperLeg" };
+        private UMAData umaData;
         private Rigidbody _rigidbody;
         private GameObject TargetGO;
 
@@ -109,12 +112,29 @@ namespace UMA.Examples
             if (dstTarget != null)
                 t = dstTarget;
 
-            if (!string.IsNullOrEmpty(TargetBone))
+            //if (!string.IsNullOrEmpty(TargetBone))
+            if(TargetBone >= 0)
             {
                 if (dstTarget != null)
-                    t = dstTarget.Find(TargetBone);
+                {
+                    umaData = dstTarget.GetComponent<UMAData>();
+                }
                 else
-                    t = target.Find(TargetBone);
+                {
+                    umaData = target.GetComponent<UMAData>();
+                }
+
+                if (umaData != null && umaData.umaRecipe != null && umaData.umaRecipe.raceData != null && umaData.umaRecipe.raceData.umaTarget == RaceData.UMATarget.Humanoid && umaData.skeleton != null)
+                {
+                    string boneName = umaData.umaRecipe.raceData.TPose.BoneNameFromHumanName(targetStrings[(int)TargetBone]);
+					if (!string.IsNullOrEmpty(boneName))
+					{
+						var bone = umaData.skeleton.GetBoneGameObject(Animator.StringToHash(boneName));
+						if(bone != null)
+							t = bone.transform;
+					}
+                }
+
                 if (t == null)
                 {
                     if (dstTarget != null)
@@ -155,6 +175,12 @@ namespace UMA.Examples
         {
             TempTransform newTransform = new TempTransform();
             Vector3 tgt = GetTarget(dstTarget);
+
+			//if the target height is less than or equal to 0, it is building or downloading- in this case dont move the camera
+			if(tgt.y <= 0f)
+			{
+				return newTransform;
+			}
 
             //DOS Modified tweaked this to be selectable
             if (Input.GetMouseButton((int)mouseButtonToUse) && Input.touchCount == 0)

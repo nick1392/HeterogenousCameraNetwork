@@ -1,4 +1,6 @@
-using UnityEngine; 
+using UnityEngine;
+using System.Collections.Generic;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -7,6 +9,14 @@ namespace UMA.CharacterSystem
 {
 	public partial class UMAWardrobeRecipe : UMATextRecipe
 	{
+		[SerializeField]
+		[Tooltip("For tracking incompatible items. Not automatic.")]
+		public List<UMAWardrobeRecipe> IncompatibleRecipes = new List<UMAWardrobeRecipe>();
+
+		[SerializeField]
+		[Tooltip("The system does not use this field. Use it for whatever you need.")]
+		public string UserField; 
+
 		#region FIELDS
 		[SerializeField]
 		public string replaces;
@@ -47,7 +57,8 @@ namespace UMA.CharacterSystem
 	#if UNITY_EDITOR
 		private bool CopyFromUTR(UMATextRecipe recipeToCopyFrom)
 		{
-			Debug.Log("WardrobeConverts");
+			if (Debug.isDebugBuild)
+				Debug.Log("WardrobeConverts");
 			if (recipeToCopyFrom.recipeType != "Wardrobe" || recipeToCopyFrom.GetType() != typeof(UMATextRecipe))
 				return false;
 			recipeType = "Wardrobe";
@@ -66,7 +77,11 @@ namespace UMA.CharacterSystem
 		#endregion
 
 	#if UNITY_EDITOR
+		#if UMA_HOTKEYS
+		[UnityEditor.MenuItem("Assets/Create/UMA/DCS/Wardrobe Recipe %#w")]
+		#else
 		[UnityEditor.MenuItem("Assets/Create/UMA/DCS/Wardrobe Recipe")]
+		#endif
 		public static void CreateWardrobeRecipeAsset()
 		{
 			UMA.CustomAssetUtility.CreateAsset<UMAWardrobeRecipe>();

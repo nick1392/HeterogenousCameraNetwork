@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UMA
 {
@@ -6,18 +8,23 @@ namespace UMA
 	/// Utility class that sets up materials for atlasing.
 	/// </summary>
 	[ExecuteInEditMode]
-	public class TextureMerge : MonoBehaviour
+    [CreateAssetMenu(menuName = "UMA/Rendering/TextureMerge")]
+    public class TextureMerge : ScriptableObject
 	{
-		public Camera myCamera;
 		public Material material;
 		public Shader normalShader;
 		public Shader diffuseShader;
 		public Shader dataShader;
 		public Shader cutoutShader;
-		public int textureMergeRectCount;
 
-		public TextureMergeRect[] textureMergeRects;
-		[System.Serializable]
+		public List<UMAPostProcess> diffusePostProcesses = new List<UMAPostProcess>();
+		public List<UMAPostProcess> normalPostProcesses = new List<UMAPostProcess>();
+		public List<UMAPostProcess> dataPostProcesses = new List<UMAPostProcess>();
+
+		private int textureMergeRectCount;
+		private TextureMergeRect[] textureMergeRects;
+
+		//[System.Serializable] //why was this serializable? the array was public serialized too
 		public struct TextureMergeRect
 		{
 			public Material mat;
@@ -25,21 +32,61 @@ namespace UMA
 			public Rect rect;
 		}
 
-		void OnRenderObject()
+		public void DrawAllRects(RenderTexture target, int width, int height, Color background = default(Color))
 		{
-			if (Camera.current != myCamera) return;
 			if (textureMergeRects != null)
 			{
+				RenderTexture backup = RenderTexture.active;
+				RenderTexture.active = target;
+				GL.Clear(true, true, background);
+				GL.PushMatrix();
+				//the matrix needs to be in the original atlas dimensions because the textureMergeRects are in that space.
+				GL.LoadPixelMatrix(0, width, height, 0);
+
 				for (int i = 0; i < textureMergeRectCount; i++)
 				{
 					DrawRect(ref textureMergeRects[i]);
 				}
+
+				GL.PopMatrix();
+				RenderTexture.active = backup;
 			}
 		}
 
 		private void DrawRect(ref TextureMergeRect textureMergeRect)
 		{
 			Graphics.DrawTexture(textureMergeRect.rect, textureMergeRect.tex, textureMergeRect.mat);
+		}
+
+		public void PostProcess(RenderTexture destination, UMAMaterial.ChannelType channelType)
+		{
+			var source = RenderTexture.GetTemporary(destination.width, destination.height, 0, destination.format, RenderTextureReadWrite.Linear);
+
+			switch (channelType)
+			{
+				case UMAMaterial.ChannelType.NormalMap:
+					foreach (UMAPostProcess postProcess in normalPostProcesses)
+					{
+						Graphics.Blit(destination, source);
+						postProcess.Process(source, destination);
+					}
+					break;
+				case UMAMaterial.ChannelType.Texture:
+					foreach (UMAPostProcess postProcess in dataPostProcesses)
+					{
+						Graphics.Blit(destination, source);
+						postProcess.Process(source, destination);
+					}
+					break;
+				case UMAMaterial.ChannelType.DiffuseTexture:
+					foreach (UMAPostProcess postProcess in diffusePostProcesses)
+					{
+						Graphics.Blit(destination, source);
+						postProcess.Process(source, destination);
+					}
+					break;
+			}
+			RenderTexture.ReleaseTemporary(source);
 		}
 
 		public void Reset()
@@ -107,8 +154,8 @@ namespace UMA
 		int height;
 		public void SetupModule(UMAData.GeneratedMaterial atlas, int idx, int textureType)
 		{
-            var atlasElement = atlas.materialFragments[idx];
-            if (atlasElement.isRectShared) return;
+			var atlasElement = atlas.materialFragments[idx];
+			if (atlasElement.isRectShared) return;
 
 			height = Mathf.FloorToInt(atlas.cropResolution.y);
 			SetupModule(atlasElement, textureType);
@@ -144,6 +191,7 @@ namespace UMA
 		{
 			textureMergeRect.rect = overlayRect;
 			textureMergeRect.tex = source.overlays[i2].textureList[textureType];
+
 			if (source.overlays[i2].overlayType == OverlayDataAsset.OverlayType.Normal)
 			{
 				switch (source.slotData.asset.material.channels[textureType].channelType)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.IO;
 using System.Collections.Generic;
 using UMA.CharacterSystem;
 
@@ -9,12 +10,15 @@ using UnityEditor.Animations;
 
 namespace UMA
 {
-    public class UMAAssetIndexer : MonoBehaviour, ISerializationCallbackReceiver
-    {
-        #region constants and static strings
-        public static string SortOrder = "Name";
+    [PreferBinarySerialization]
+    public class UMAAssetIndexer : ScriptableObject, ISerializationCallbackReceiver
+	{
+
+		#region constants and static strings
+		public static string SortOrder = "Name";
         public static string[] SortOrders = { "Name", "AssetName" };
         public static Dictionary<string, System.Type> TypeFromString = new Dictionary<string, System.Type>();
+        public static Dictionary<string, AssetItem> GuidTypes = new Dictionary<string, AssetItem>();
         #endregion
         #region Fields
         public bool AutoUpdate;
@@ -28,6 +32,7 @@ namespace UMA
         { (typeof(UMAWardrobeRecipe)),(typeof(UMAWardrobeRecipe)) },
         { (typeof(UMAWardrobeCollection)),(typeof(UMAWardrobeCollection)) },
         { (typeof(RuntimeAnimatorController)),(typeof(RuntimeAnimatorController)) },
+        { (typeof(AnimatorOverrideController)),(typeof(RuntimeAnimatorController)) },
 #if UNITY_EDITOR
         { (typeof(AnimatorController)),(typeof(RuntimeAnimatorController)) },
 #endif
@@ -52,6 +57,7 @@ namespace UMA
         (typeof(UMAWardrobeRecipe)),
         (typeof(UMAWardrobeCollection)),
         (typeof(RuntimeAnimatorController)),
+        (typeof(AnimatorOverrideController)),
 #if UNITY_EDITOR
         (typeof(AnimatorController)),
 #endif
@@ -67,8 +73,8 @@ namespace UMA
         public static System.Diagnostics.Stopwatch StartTimer()
         {
 #if TIMEINDEXER
-
-            Debug.Log("Timer started at " + Time.realtimeSinceStartup + " Sec");
+            if(Debug.isDebugBuild)
+                Debug.Log("Timer started at " + Time.realtimeSinceStartup + " Sec");
             System.Diagnostics.Stopwatch st = new System.Diagnostics.Stopwatch();
             st.Start();
 
@@ -82,7 +88,8 @@ namespace UMA
         {
 #if TIMEINDEXER
             st.Stop();
-            Debug.Log(Status + " Completed " + st.ElapsedMilliseconds + "ms");
+            if(Debug.isDebugBuild)
+                Debug.Log(Status + " Completed " + st.ElapsedMilliseconds + "ms");
             return;
 #endif
         }
@@ -93,24 +100,18 @@ namespace UMA
             {
                 if (theIndex == null || theIndexer == null)
                 {
-#if UNITY_EDITOR
                     var st = StartTimer();
-                    theIndex = Resources.Load("AssetIndexer") as GameObject;
-                    if (theIndex == null)
-                    {
-                        return null;
-                    }
-                    theIndexer = theIndex.GetComponent<UMAAssetIndexer>();
+                    theIndexer = Resources.Load("AssetIndexer") as UMAAssetIndexer;
                     if (theIndexer == null)
                     {
-                        return null;
+/*
+                        if (Debug.isDebugBuild)
+                        {
+                            Debug.LogError("Unable to load the AssetIndexer. This item is used to index non-asset bundle resources and is required.");
+                        }
+*/
                     }
                     StopTimer(st,"Asset index load");
-#else
-                theIndex = GameObject.Instantiate(Resources.Load<GameObject>("AssetIndexer")) as GameObject;
-                theIndex.hideFlags = HideFlags.HideAndDontSave;
-                theIndexer = theIndex.GetComponent<UMAAssetIndexer>();
-#endif
                 }
                 return theIndexer;
             }
@@ -132,7 +133,8 @@ namespace UMA
             {
                 if (ItemsByPath.ContainsKey(ai._Path))
                 {
-                    Debug.Log("Duplicate path for item: " + ai._Path);
+                    if (Debug.isDebugBuild)
+                        Debug.Log("Duplicate path for item: " + ai._Path);
                     continue;
                 }
                 ItemsByPath.Add(ai._Path, ai);
@@ -184,7 +186,8 @@ namespace UMA
         public void ForceSave()
         {
             var st = StartTimer();
-            EditorUtility.SetDirty(this.gameObject);
+			EditorUtility.SetDirty(this);
+            //EditorUtility.SetDirty(this.gameObject);
             AssetDatabase.SaveAssets();
             StopTimer(st, "ForceSave");
         }
@@ -358,7 +361,8 @@ namespace UMA
                         st.Stop();
                         if (st.ElapsedMilliseconds > 2)
                         {
-                            Debug.Log("GetAsset 0 for type "+typeof(T).Name+" completed in " + st.ElapsedMilliseconds + "ms");
+                            if (Debug.isDebugBuild)
+                                Debug.Log("GetAsset 0 for type "+typeof(T).Name+" completed in " + st.ElapsedMilliseconds + "ms");
                         }
                         return (kp.Value.Item as T);
                     }
@@ -367,7 +371,8 @@ namespace UMA
                         st.Stop();
                         if (st.ElapsedMilliseconds > 2)
                         {
-                            Debug.Log("GetAsset 1 for type " + typeof(T).Name + " completed in " + st.ElapsedMilliseconds + "ms");
+                            if (Debug.isDebugBuild)
+                                Debug.Log("GetAsset 1 for type " + typeof(T).Name + " completed in " + st.ElapsedMilliseconds + "ms");
                         }
                         return null;
                     }
@@ -376,7 +381,8 @@ namespace UMA
             st.Stop();
             if (st.ElapsedMilliseconds > 2)
             {
-                Debug.Log("GetAsset 2 for type " + typeof(T).Name + " completed in " + st.ElapsedMilliseconds + "ms");
+                if (Debug.isDebugBuild)
+                    Debug.Log("GetAsset 2 for type " + typeof(T).Name + " completed in " + st.ElapsedMilliseconds + "ms");
             }
             return null;
         }
@@ -419,7 +425,6 @@ namespace UMA
         /// Check to see if something is an an assetbundle. If so, don't add it
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="assetName"></param>
         /// <returns></returns>
         public bool InAssetBundle(string path)
         {
@@ -458,13 +463,18 @@ namespace UMA
         /// <summary>
         /// Adds an asset to the index. Does NOT save the asset! you must do that separately.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="o"></param>
+        /// <param name="type">System Type of the object to add.</param>
+        /// <param name="name">Name for the object.</param>
+        /// <param name="path">Path to the object.</param>
+        /// <param name="o">The Object to add.</param>
+        /// <param name="skipBundleCheck">Option to skip checking Asset Bundles.</param>
         public void AddAsset(System.Type type, string name, string path, Object o, bool skipBundleCheck = false)
         {
             if (o == null)
             {
-                Debug.Log("Skipping null item");
+                if (Debug.isDebugBuild)
+                    Debug.Log("Skipping null item");
+
                 return;
             }
             if (type == null)
@@ -480,7 +490,9 @@ namespace UMA
         /// Adds an asset to the index. If the name already exists, it is not added. (Should we do this, or replace it?)
         /// </summary>
         /// <param name="ai"></param>
-        private void AddAssetItem(AssetItem ai, bool SkipBundleCheck = false)
+        /// <param name="SkipBundleCheck"></param>
+        /// <returns>Whether the asset was added or not.</returns>
+        private bool AddAssetItem(AssetItem ai, bool SkipBundleCheck = false)
         {
             try
             {
@@ -489,14 +501,14 @@ namespace UMA
                 // Get out if we already have it.
                 if (TypeDic.ContainsKey(ai._Name))
                 {
-                    Debug.Log("Duplicate asset " + ai._Name + " was ignored.");
-                    return;
+                    // Debug.Log("Duplicate asset " + ai._Name + " was ignored.");
+                    return false;
                 }
 
                 if (ai._Name.ToLower().Contains((ai._Type.Name + "placeholder").ToLower()))
                 {
-                    Debug.Log("Placeholder asset " + ai._Name + " was ignored. Placeholders are not indexed.");
-                    return;
+                    //Debug.Log("Placeholder asset " + ai._Name + " was ignored. Placeholders are not indexed.");
+                    return false;
                 }
 #if UNITY_EDITOR
                 if (!SkipBundleCheck)
@@ -504,20 +516,36 @@ namespace UMA
                     string Path = AssetDatabase.GetAssetPath(ai.Item.GetInstanceID());
                     if (InAssetBundle(Path))
                     {
-                        Debug.Log("Asset " + ai._Name + "is in Asset Bundle, and was not added to the index.");
-                        return;
+                        if(Debug.isDebugBuild)
+                            Debug.LogWarning("Asset " + ai._Name + "is in an Asset Bundle, and was not added to the index.");
+                        return false;
                     }
                 }
 #endif
                 TypeDic.Add(ai._Name, ai);
+                if (GuidTypes.ContainsKey(ai._Guid))
+                {
+                    return false;
+                }
+                GuidTypes.Add(ai._Guid, ai);
             }
             catch (System.Exception ex)
             {
-                UnityEngine.Debug.LogWarning("Exception in UMAAssetIndexer.AddAssetItem: " + ex);
+                    UnityEngine.Debug.LogWarning("Exception in UMAAssetIndexer.AddAssetItem: " + ex);
             }
+            return true;
         }
 
 #if UNITY_EDITOR
+
+        public AssetItem FromGuid(string GUID)
+        {
+            if (GuidTypes.ContainsKey(GUID))
+            {
+                return GuidTypes[GUID];
+            }
+            return null;
+        }
         /// <summary>
         /// This is the evil version of AddAsset. This version cares not for the good of the project, nor
         /// does it care about readability, expandibility, and indeed, hates goodness with every beat of it's 
@@ -531,14 +559,14 @@ namespace UMA
         /// And EvilAddAsset doesn't save either. You have to do that manually. 
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="Name"></param>
         /// <param name="o"></param>
-        public void EvilAddAsset(System.Type type, Object o)
+        /// <returns>Whether the Asset was added or not.</returns>
+        public bool EvilAddAsset(System.Type type, Object o)
         {
             AssetItem ai = null;
             ai = new AssetItem(type, o);
             ai._Path = AssetDatabase.GetAssetPath(o.GetInstanceID());
-            AddAssetItem(ai);
+            return AddAssetItem(ai);
         }
 
         /// <summary>
@@ -550,7 +578,12 @@ namespace UMA
         {
             System.Type theType = TypeToLookup[type];
             Dictionary<string, AssetItem> TypeDic = GetAssetDictionary(theType);
-            TypeDic.Remove(Name);
+            if (TypeDic.ContainsKey(Name))
+            {
+                AssetItem ai = TypeDic[Name];
+                TypeDic.Remove(Name);
+                GuidTypes.Remove(Name);
+            }
         }
 #endif
 #endregion
@@ -563,6 +596,7 @@ namespace UMA
         /// </summary>
         private void UpdateSerializedDictionaryItems()
         {
+            GuidTypes = new Dictionary<string, AssetItem>();
             foreach (System.Type type in Types)
             {
                 CreateLookupDictionary(type);
@@ -615,6 +649,7 @@ namespace UMA
                 	}
 				}
             }
+
         }
 
         /// <summary>
@@ -688,14 +723,18 @@ namespace UMA
                 if (s != "AnimatorController")
                 {
                     string[] guids = AssetDatabase.FindAssets("t:" + s);
-                    foreach (string guid in guids)
+                    for(int i = 0; i < guids.Length; i++)
                     {
-                        string Path = AssetDatabase.GUIDToAssetPath(guid);
-                        if (Path.ToLower().Contains(".shader"))
+                        string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
+
+                        string fileName = Path.GetFileName(assetPath);
+                        EditorUtility.DisplayProgressBar("Adding Items to Global Library.", fileName, ((float)i / (float)guids.Length));
+
+                        if (assetPath.ToLower().Contains(".shader"))
                         {
                             continue;
                         }
-                        Object o = AssetDatabase.LoadAssetAtPath(Path, CurrentType);
+                        Object o = AssetDatabase.LoadAssetAtPath(assetPath, CurrentType);
                         if (o != null)
                         {
                             AssetItem ai = new AssetItem(CurrentType, o);
@@ -703,16 +742,19 @@ namespace UMA
                         }
                         else
                         {
-                            if (Path == null)
+                            if (assetPath == null)
                             {
-                                Debug.LogWarning("Cannot instantiate item " + guid);
+                                if (Debug.isDebugBuild)
+                                    Debug.LogWarning("Cannot instantiate item " + guids[i]);
                             }
                             else
                             {
-                                Debug.LogWarning("Cannot instantiate item " + Path);
+                                if (Debug.isDebugBuild)
+                                    Debug.LogWarning("Cannot instantiate item " + assetPath);
                             }
                         }
                     }
+                    EditorUtility.ClearProgressBar();
                 }
             }
             ForceSave();
@@ -724,6 +766,7 @@ namespace UMA
 		public void Clear(bool forceSave = true)
         {
             // Rebuild the tables
+            GuidTypes.Clear();
             ClearReferences();
             SerializedItems.Clear();
             UpdateSerializedDictionaryItems();
@@ -817,6 +860,7 @@ namespace UMA
         (typeof(UMAWardrobeRecipe)),
         (typeof(UMAWardrobeCollection)),
         (typeof(RuntimeAnimatorController)),
+        (typeof(AnimatorOverrideController)),
 #if UNITY_EDITOR
         (typeof(AnimatorController)),
 #endif
@@ -833,7 +877,8 @@ namespace UMA
         { (typeof(UMAWardrobeRecipe)),(typeof(UMAWardrobeRecipe)) },
         { (typeof(UMAWardrobeCollection)),(typeof(UMAWardrobeCollection)) },
         { (typeof(RuntimeAnimatorController)),(typeof(RuntimeAnimatorController)) },
-#if UNITY_EDITOR
+        { (typeof(AnimatorOverrideController)),(typeof(RuntimeAnimatorController)) },
+        #if UNITY_EDITOR
         { (typeof(AnimatorController)),(typeof(RuntimeAnimatorController)) },
 #endif
         {  typeof(TextAsset), typeof(TextAsset) },
@@ -850,7 +895,8 @@ namespace UMA
                 if (sType == null)
                 {
                     invalidTypeNames.Add(s);
-                    Debug.LogWarning("Could not find type for " + s);
+                    if (Debug.isDebugBuild)
+                        Debug.LogWarning("Could not find type for " + s);
                     continue;
                 }
                 newTypes.Add(sType);

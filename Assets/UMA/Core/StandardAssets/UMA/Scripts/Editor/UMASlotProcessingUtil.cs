@@ -28,8 +28,7 @@ namespace UMA.Editors
             }
 
             GameObject tempGameObject = UnityEngine.Object.Instantiate(mesh.transform.parent.gameObject) as GameObject;
-            PrefabUtility.DisconnectPrefabInstance(tempGameObject);
-            var resultingSkinnedMeshes = tempGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+			var resultingSkinnedMeshes = tempGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
             SkinnedMeshRenderer resultingSkinnedMesh = null;
             foreach (var skinnedMesh in resultingSkinnedMeshes)
             {
@@ -57,7 +56,9 @@ namespace UMA.Editors
                 resultingMesh = BuildNewReduceBonesMesh(resultingMesh, usedBonesDictionary);
             }
 
-            AssetDatabase.CreateAsset(resultingMesh, path + '/' + mesh.name + ".asset");
+			string theMesh = path + '/' + mesh.name + ".asset";
+
+			AssetDatabase.CreateAsset(resultingMesh, theMesh );
 
             tempGameObject.name = mesh.transform.parent.gameObject.name;
             Transform[] transformList = tempGameObject.GetComponentsInChildren<Transform>();
@@ -88,7 +89,13 @@ namespace UMA.Editors
                 resultingSkinnedMesh.sharedMesh = resultingMesh;
             }
 
-            var skinnedResult = UnityEditor.PrefabUtility.CreatePrefab(path + '/' + assetName + "_Skinned.prefab", newObject);
+			string SkinnedName = path + '/' + assetName + "_Skinned.prefab";
+
+#if UNITY_2018_3_OR_NEWER
+            var skinnedResult = PrefabUtility.SaveAsPrefabAsset(newObject, SkinnedName);
+#else
+			var skinnedResult = UnityEditor.PrefabUtility.CreatePrefab(SkinnedName, newObject);
+#endif
             GameObject.DestroyImmediate(newObject);
 
             var meshgo = skinnedResult.transform.Find(mesh.name);
@@ -101,9 +108,11 @@ namespace UMA.Editors
                 slot.meshData.RetrieveDataFromUnityCloth(cloth);
             }
             AssetDatabase.SaveAssets();
-        }
+			AssetDatabase.DeleteAsset(SkinnedName);
+			AssetDatabase.DeleteAsset(theMesh);
+		}
 
-		public static SlotDataAsset CreateSlotData(string slotFolder, string assetFolder, string assetName, SkinnedMeshRenderer mesh, UMAMaterial material, SkinnedMeshRenderer prefabMesh, string rootBone)
+		public static SlotDataAsset CreateSlotData(string slotFolder, string assetFolder, string assetName, SkinnedMeshRenderer mesh, UMAMaterial material, SkinnedMeshRenderer prefabMesh, string rootBone, bool binarySerialization = false)
 		{
 			if (!System.IO.Directory.Exists(slotFolder + '/' + assetFolder))
 			{
@@ -116,7 +125,7 @@ namespace UMA.Editors
 			}
 
 			GameObject tempGameObject = UnityEngine.Object.Instantiate(mesh.transform.parent.gameObject) as GameObject;
-			PrefabUtility.DisconnectPrefabInstance(tempGameObject);
+
 			var resultingSkinnedMeshes = tempGameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
 			SkinnedMeshRenderer resultingSkinnedMesh = null;
 			foreach (var skinnedMesh in resultingSkinnedMeshes)
@@ -145,7 +154,19 @@ namespace UMA.Editors
 				resultingMesh = BuildNewReduceBonesMesh(resultingMesh, usedBonesDictionary);
 			}
 
-			AssetDatabase.CreateAsset(resultingMesh, slotFolder + '/' + assetName + '/' + mesh.name + ".asset");
+			string theMesh = slotFolder + '/' + assetName + '/' + mesh.name + ".asset";
+			if (binarySerialization)
+			{
+				//Work around for mesh being serialized as project format settings (text) when binary is much faster.
+				//If Unity introduces a way to set mesh as binary serialization then this becomes unnecessary.
+				BinaryAssetWrapper binaryAsset = ScriptableObject.CreateInstance<BinaryAssetWrapper>();
+				AssetDatabase.CreateAsset(binaryAsset, theMesh);
+				AssetDatabase.AddObjectToAsset(resultingMesh, binaryAsset);
+			}
+			else
+			{
+				AssetDatabase.CreateAsset(resultingMesh, theMesh);
+			}
 
 			tempGameObject.name = mesh.transform.parent.gameObject.name;
 			Transform[] transformList = tempGameObject.GetComponentsInChildren<Transform>();
@@ -176,7 +197,13 @@ namespace UMA.Editors
 				resultingSkinnedMesh.sharedMesh = resultingMesh;
 			}
 
-			var skinnedResult = UnityEditor.PrefabUtility.CreatePrefab(slotFolder + '/' + assetName + '/' + assetName + "_Skinned.prefab", newObject);
+			string SkinnedName = slotFolder + '/' + assetName + '/' + assetName + "_Skinned.prefab";
+
+#if UNITY_2018_3_OR_NEWER
+			var skinnedResult = PrefabUtility.SaveAsPrefabAsset(newObject, SkinnedName);
+#else
+			var skinnedResult = UnityEditor.PrefabUtility.CreatePrefab(SkinnedName, newObject);
+#endif
 			GameObject.DestroyImmediate(newObject);
 
 			var meshgo = skinnedResult.transform.Find(mesh.name);
@@ -204,6 +231,8 @@ namespace UMA.Editors
 				AssetDatabase.CreateAsset(additionalSlot, slotFolder + '/' + assetName + '/' + assetName + "_"+ i +"_Slot.asset");
 			}
 			AssetDatabase.SaveAssets();
+			AssetDatabase.DeleteAsset(SkinnedName);
+			AssetDatabase.DeleteAsset(theMesh);
 			return slot;
 		}
 
@@ -227,24 +256,10 @@ namespace UMA.Editors
 
 		private static Mesh BuildNewReduceBonesMesh(Mesh sourceMesh, Dictionary<int, int> usedBonesDictionary)
 		{
-			var newMesh = new Mesh();
-			newMesh.vertices = sourceMesh.vertices;
-			newMesh.uv = sourceMesh.uv;
-			newMesh.uv2 = sourceMesh.uv2;
-			newMesh.uv3 = sourceMesh.uv3;
-			newMesh.uv4 = sourceMesh.uv4;
-			newMesh.tangents = sourceMesh.tangents;
-			newMesh.normals = sourceMesh.normals;
-			newMesh.name = sourceMesh.name;
-			newMesh.colors32 = sourceMesh.colors32;
-			newMesh.colors = sourceMesh.colors;
+			Mesh newMesh = GameObject.Instantiate<Mesh>(sourceMesh);
 			newMesh.boneWeights = BuildNewBoneWeights(sourceMesh.boneWeights, usedBonesDictionary);
 			newMesh.bindposes = BuildNewBindPoses(sourceMesh.bindposes, usedBonesDictionary);
-			newMesh.subMeshCount = sourceMesh.subMeshCount;
-			for (int i = 0; i < sourceMesh.subMeshCount; i++)
-			{
-				newMesh.SetTriangles(sourceMesh.GetTriangles(i), i);
-			}
+
 			return newMesh;
 		}
 

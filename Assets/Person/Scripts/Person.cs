@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-
-
+using Unity.Collections;
+using Unity.Jobs;
 
 public class Person : MonoBehaviour
 {
@@ -80,7 +80,7 @@ public class Person : MonoBehaviour
     public LayerMask objectsLayerMask = 9;
     //__________OGJ_INTERACTION_END_________________
 
-
+    
     //__________UI_START_________________
 
 
@@ -283,6 +283,7 @@ public class Person : MonoBehaviour
                 hitDistance[0] = 100.0f;
                 hitDistance[1] = 100.0f;
                 hitDistance[2] = 100.0f;
+
                 if (Physics.Raycast(gameObject.transform.position + heightEye1, eyeDir, out hit, objRange3, objectsLayerMask))
                 {
                     hitDistance[0] = hit.distance;
@@ -398,28 +399,71 @@ public class Person : MonoBehaviour
                         escapeDirections[i] = Quaternion.Euler(0, +deltaAngle * i, 0) * escapeDirections[0];
                     }
                     // Il vettore escapeDirections contiene la rosa di direzioni da analizzare.
-                    int pointer = 0;
-                    foreach (Vector3 dirTest in escapeDirections)
-                    {
-                        //DrawLine(gameObject.transform.position, gameObject.transform.position + dirTest.normalized * 3, Color.blue);
+                    
+                    var results = new NativeArray<RaycastHit>(numAngleDivisions, Allocator.Temp);
+                    var commands = new NativeArray<RaycastCommand>(numAngleDivisions, Allocator.Temp);
 
-                        if (Physics.Raycast(gameObject.transform.position + heightEye2, dirTest, out hitRay, escapeRange))
+                    // Set the data of the first command
+                    Vector3 origin = Vector3.forward * -10;
+                    Vector3 direction = Vector3.forward;
+
+                    commands[0] = new RaycastCommand(origin, direction);
+
+                    // Schedule the batch of raycasts
+
+                    // Wait for the batch processing job to complete
+
+                    // Copy the result. If batchedHit.collider is null there was no hit
+                    RaycastHit batchedHit = results[0];
+
+                    // Dispose the buffers
+
+                    for (int i = 0; i < escapeDirections.Length; i++)
+                    {
+                        commands[i] = new RaycastCommand(gameObject.transform.position + heightEye2, escapeDirections[i], escapeRange);
+                    }
+                    var handle = RaycastCommand.ScheduleBatch(commands, results, 1);
+                    handle.Complete();
+                    for (int i = 0; i < escapeDirections.Length; i++)
+                    {
+                        if (results[i].collider)
                         {
-                            if (hitRay.collider.CompareTag("Oggetti"))
-                            {
-                                escapeDistance[pointer] = hitRay.distance;
-                            }
+                            if (results[i].collider.CompareTag("Oggetti"))
+                                escapeDistance[i] = results[i].distance;
                             else
-                            {
-                                escapeDistance[pointer] = escapeRange;
-                            }
+                                escapeDistance[i] = escapeRange;
                         }
                         else
                         {
-                            escapeDistance[pointer] = escapeRange;
+                            escapeDistance[i] = escapeRange;
                         }
-                        pointer++;
                     }
+                    
+//                    int pointer = 0;
+//                    foreach (Vector3 dirTest in escapeDirections)
+//                    {
+//                        //DrawLine(gameObject.transform.position, gameObject.transform.position + dirTest.normalized * 3, Color.blue);
+//
+//                        if (Physics.Raycast(gameObject.transform.position + heightEye2, dirTest, out hitRay, escapeRange))
+//                        {
+//                            if (hitRay.collider.CompareTag("Oggetti"))
+//                            {
+//                                escapeDistance[pointer] = hitRay.distance;
+//                            }
+//                            else
+//                            {
+//                                escapeDistance[pointer] = escapeRange;
+//                            }
+//                        }
+//                        else
+//                        {
+//                            escapeDistance[pointer] = escapeRange;
+//                        }
+//                        pointer++;
+//                    }
+                    
+                    results.Dispose();
+                    commands.Dispose();
                     // Calcola il gradiente:
                     for (int i = 0; i < (numAngleDivisions - 1); ++i)
                     {

@@ -21,11 +21,18 @@ namespace UMA.PoseTools
 		public UMAData umaData;
 
 		private int jawHash = 0;
+		private int neckHash = 0;
+		private int headHash = 0;
+
 		private bool initialized = false;
 		[System.NonSerialized]
 		public int SlotUpdateVsCharacterUpdate;
 
 		public bool logResetErrors;
+
+		public bool useDisableDistance = false;
+		public float disableDistance = 10f;
+		private Transform _mainCameraTransform;
 
 		// Use this for initialization
 		void Start()
@@ -37,6 +44,9 @@ namespace UMA.PoseTools
 		{
 			blinkDelay = Random.Range(minBlinkDelay, maxBlinkDelay);
 
+			if(Camera.main != null)
+				_mainCameraTransform = Camera.main.transform;
+
 			if (umaData == null)
 			{
 				// Find the UMAData, which could be up or down the hierarchy
@@ -47,7 +57,8 @@ namespace UMA.PoseTools
 				}
 				if (umaData == null)
 				{
-					Debug.LogError("Couldn't locate UMAData component");
+					if (Debug.isDebugBuild)
+						Debug.LogError("Couldn't locate UMAData component");
 				}
 			}
 
@@ -58,6 +69,14 @@ namespace UMA.PoseTools
 					Transform jaw = umaData.animator.GetBoneTransform(HumanBodyBones.Jaw);
 					if (jaw != null)
 						jawHash = UMAUtils.StringToHash(jaw.name);
+
+					Transform neck = umaData.animator.GetBoneTransform(HumanBodyBones.Neck);
+					if (neck != null)
+						neckHash = UMAUtils.StringToHash(neck.name);
+
+					Transform head = umaData.animator.GetBoneTransform(HumanBodyBones.Head);
+					if (head != null)
+						headHash = UMAUtils.StringToHash(head.name);
 				}
 				initialized = true;
 			}
@@ -66,10 +85,31 @@ namespace UMA.PoseTools
 		void Update()
 		{
 			if (!initialized)
+			{
+				Initialize();
 				return;
+			}
+
+			if (_mainCameraTransform != null && useDisableDistance && (_mainCameraTransform.position - transform.position).sqrMagnitude > (disableDistance * disableDistance))
+				return;
+
+			// Fix for animation systems which require consistent values frame to frame
+			Quaternion headRotation = Quaternion.identity;
+			Quaternion neckRotation = Quaternion.identity;
+
+			try { headRotation = umaData.skeleton.GetRotation(headHash); }
+			catch(System.Exception) { Debug.LogError("GetRotation: Head Bone not found!"); }
+
+			try { neckRotation = umaData.skeleton.GetRotation(neckHash); }
+			catch(System.Exception) { Debug.LogError("GetRotation: Neck Bone not found!"); }
 
 			// Need to reset bones here if we want Mecanim animation
 			expressionSet.RestoreBones(umaData.skeleton, logResetErrors);
+
+			if (!overrideMecanimNeck)
+				umaData.skeleton.SetRotation(neckHash, neckRotation);
+			if (!overrideMecanimHead)
+				umaData.skeleton.SetRotation(headHash, headRotation);
 
 			if (gazeWeight > 0f)
 			{
@@ -87,6 +127,9 @@ namespace UMA.PoseTools
 				return;
 
 			if (umaData == null || umaData.skeleton == null)
+				return;
+
+			if (_mainCameraTransform != null && useDisableDistance && (_mainCameraTransform.position - transform.position).sqrMagnitude > (disableDistance * disableDistance))
 				return;
 
 			if (enableSaccades)
@@ -148,7 +191,7 @@ namespace UMA.PoseTools
 			if (saccadeDelay < 0f)
 			{
 				saccadeTargetPrev = saccadeTarget;
-				
+
 				int saccadeDirection = Random.Range(0, 4);
 				float saccadeOffset = UMAUtils.GaussianRandom(0f, 0.125f);
 				switch (saccadeDirection)
@@ -166,12 +209,12 @@ namespace UMA.PoseTools
 						saccadeTarget.Set(saccadeOffset, -1f + Mathf.Abs(saccadeOffset));
 						break;
 				}
-				
+
 				float saccadeMagnitude = Random.Range(0.01f, 15f);
 				float saccadeDistance = (-6.9f / eyeMovementRange) * Mathf.Log(saccadeMagnitude / 15.7f);
 				saccadeDuration = 0.021f + 0.0022f * saccadeDistance * eyeMovementRange;
 				saccadeProgress = 0f;
-				
+
 				switch (gazeMode)
 				{
 					case GazeMode.Listening:
@@ -180,7 +223,7 @@ namespace UMA.PoseTools
 						else
 							saccadeDelay = UMAUtils.GaussianRandom(13f / 30f, 7.1f / 30f);
 						break;
-					
+
 					default:
 						if (Mathf.Abs(saccadeDistance) < mutualGazeRange)
 							saccadeDelay = UMAUtils.GaussianRandom(93.9f / 30f, 94.9f / 30f);
@@ -188,19 +231,19 @@ namespace UMA.PoseTools
 							saccadeDelay = UMAUtils.GaussianRandom(27.8f / 30f, 24f / 30f);
 						break;
 				}
-				
+
 				if (saccadeDelay < MinSaccadeDelay)
 					saccadeDelay = MinSaccadeDelay;
-				
+
 				saccadeTarget *= saccadeDistance;
 			}
-			
+
 			if (saccadeProgress < 1f)
 			{
 				float timeProgress = Time.deltaTime / saccadeDuration;
 				float progressRate = 1.5f - 3f * Mathf.Pow(saccadeProgress - 0.5f, 2);
 				saccadeProgress += timeProgress * progressRate;
-				
+
 				leftEyeIn_Out = Mathf.Lerp(saccadeTargetPrev.x, saccadeTarget.x, saccadeProgress);
 				leftEyeUp_Down = Mathf.Lerp(saccadeTargetPrev.y, saccadeTarget.y, saccadeProgress);
 				rightEyeIn_Out = Mathf.Lerp(-saccadeTargetPrev.x, -saccadeTarget.x, saccadeProgress);
@@ -220,7 +263,7 @@ namespace UMA.PoseTools
 				leftEyeOpen_Close = 0f;
 			if (rightEyeOpen_Close < -1f)
 				rightEyeOpen_Close = 0f;
-			
+
 			blinkDelay -= Time.deltaTime;
 			if (blinkDelay < blinkDuration)
 			{

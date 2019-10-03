@@ -17,7 +17,6 @@ namespace UMA
 		private LinkedList<UMAData> cleanUmas = new LinkedList<UMAData>();
 		private LinkedList<UMAData> dirtyUmas = new LinkedList<UMAData>();
 		private UMAGeneratorCoroutine activeGeneratorCoroutine;
-		public Transform textureMergePrefab;
 		public UMAMeshCombiner meshCombiner;
 
         /// <summary>
@@ -26,11 +25,18 @@ namespace UMA
         [Tooltip("Increase scale factor to decrease texture usage. A value of 1 means the textures will not be downsampled. Values greater than 1 will result in texture savings. The size of the texture is divided by this value.")]
         public int InitialScaleFactor = 1;
 
+		[Tooltip("Number of iterations to process each frame")]
+		public int IterationCount = 1;
+
 		/// <summary>
 		/// If true, generate in a single update.
 		/// </summary>
         [Tooltip("Set Fast Generation to true to have the UMA Avatar generated in a single update. Otherwise, generation can span multiple frames.")]
 		public bool fastGeneration = true;
+
+		[Tooltip("Enable Process All Pending to force the generate to process all pending UMA during the next frame")]
+		public bool processAllPending = false;
+
 		private int forceGarbageCollect;
         /// <summary>
         /// Number of character updates before triggering System garbage collect.
@@ -65,10 +71,8 @@ namespace UMA
 
 			if (!textureMerge)
 			{
-				Transform tempTextureMerger = Instantiate(textureMergePrefab, Vector3.zero, Quaternion.identity) as Transform;
-				textureMerge = tempTextureMerger.GetComponent("TextureMerge") as TextureMerge;
-				textureMerge.transform.parent = transform;
-				textureMerge.gameObject.SetActive(false);
+				if (Debug.isDebugBuild)
+					Debug.LogError("No TextureMerge set!");
 			}
 
 			//Garbage Collection hack
@@ -129,7 +133,22 @@ namespace UMA
 			{
 				stopWatch.Reset();
 				stopWatch.Start();
-				OnDirtyUpdate();
+				int count = IterationCount;
+
+				// If processAllPending is set, process as many are in the queue right now.
+				// We get the count (and multiply by two for slow gen) in case bad events add more items to the queue.
+				if (processAllPending)
+				{
+					count = umaDirtyList.Count;
+					if (!fastGeneration) count *= 2;
+				}
+
+				for (int i = 0; i < count; i++)
+				{
+					OnDirtyUpdate();
+					if (IsIdle())
+						break;
+				}
 				ElapsedTicks += stopWatch.ElapsedTicks;
 #if UNITY_EDITOR
 				UnityEditor.EditorUtility.SetDirty(this);
@@ -196,8 +215,11 @@ namespace UMA
 				umaData.FireCharacterBegunEvents();
 			}
 
+			PreApply(umaData);
+
 			if (umaData.isTextureDirty)
 			{
+				bool meshWasDirty = umaData.isMeshDirty;
 				if (activeGeneratorCoroutine == null)
 				{
 					TextureProcessBaseCoroutine textureProcessCoroutine;
@@ -217,8 +239,12 @@ namespace UMA
 					TextureChanged++;
 				}
 
-				if (!workDone || !fastGeneration || umaData.isMeshDirty)
+				//shouldn't this only cause another loop if this part MADE the mesh dirty?
+				if (!workDone || !fastGeneration || (!meshWasDirty && umaData.isMeshDirty))
+				{
+					//Debug.Log("workDone = " + workDone + " fastGeneration = " + fastGeneration + " umaData.isMeshDirty = " + umaData.isMeshDirty);
 					return false;
+				}
 			}
 
 			if (umaData.isMeshDirty)
@@ -254,6 +280,12 @@ namespace UMA
 
 		public virtual void OnDirtyUpdate()
 		{
+			//var DirtyStopwatch = new System.Diagnostics.Stopwatch();
+			//DirtyStopwatch.Start();
+			//var charName = "";
+			//if (umaDirtyList[0] != null)
+			//	charName = umaDirtyList[0].gameObject.name;
+
 			try
 			{
 				if (HandleDirtyUpdate(umaDirtyList[0]))
@@ -271,8 +303,15 @@ namespace UMA
 			}
 			catch (Exception ex)
 			{
-				UnityEngine.Debug.LogWarning("Exception in UMAGeneratorBuiltin.OnDirtyUpdate: " + ex);
+				if (Debug.isDebugBuild)
+					UnityEngine.Debug.LogWarning("Exception in UMAGeneratorBuiltin.OnDirtyUpdate: " + ex);
 			}
+			//anything more than 166,000 is too long (166,000 is 1 frame @ 60fps)
+			//the demo alien is about 65,000 on average- this is a big chunk of the available time though and my machine is fast
+			//Human Male DCS using pre plugins dna is about 45,000 on average but then its only doing 'skeletonModifiers' and 1 bonepose
+			//where as elfOrAlien demo is doing SkeletonModifiers + 3 BonePoses + 2 Blendshapes + 7 ColorDNAs
+			//if(charName != "")
+			//Debug.Log(charName + " DirtyUpdate took " + DirtyStopwatch.ElapsedTicks);
 		}
 
 		private void UpdateUMAMesh(bool updatedAtlas)
@@ -283,17 +322,53 @@ namespace UMA
 			}
 			else
 			{
-				Debug.LogError("UMAGenerator.UpdateUMAMesh, no MeshCombiner specified", gameObject);
+				if (Debug.isDebugBuild)
+					Debug.LogError("UMAGenerator.UpdateUMAMesh, no MeshCombiner specified", gameObject);
 			}
 		}
 
-		/// <inheritdoc/>
-		public override void addDirtyUMA(UMAData umaToAdd)
+
+        /// <inheritdoc/>
+        public override bool updatePending(UMAData umaToCheck)
+        {
+            if (umaDirtyList.Count < 2)
+                return false;
+
+            int val = umaDirtyList.IndexOf(umaToCheck, 1);
+            return val != -1;
+        }
+
+        /// <inheritdoc/>
+        public override bool updateProcessing(UMAData umaToCheck)
+        {
+            if (umaDirtyList.Count > 0)
+            {
+                if (umaDirtyList[0] == umaToCheck)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public override void removeUMA(UMAData umaToRemove)
+        {
+            // Remove from the various lists if it exists
+            umaDirtyList.Remove(umaToRemove);
+            cleanUmas.Remove(umaToRemove);
+            dirtyUmas.Remove(umaToRemove);
+        }
+
+        /// <inheritdoc/>
+        public override void addDirtyUMA(UMAData umaToAdd)
 		{
 			if (umaToAdd)
 			{
-				umaDirtyList.Add(umaToAdd);
-				umaToAdd.MoveToList(dirtyUmas);
+                // guard against duplicates
+                if (!updatePending(umaToAdd))
+                {
+                    umaDirtyList.Add(umaToAdd);
+                    umaToAdd.MoveToList(dirtyUmas);
+                }
 			}
 		}
 
@@ -318,9 +393,16 @@ namespace UMA
 				umaData.FireCharacterCompletedEvents();
 				if (umaData.skeleton.boneCount > 300)
 				{
-					Debug.LogWarning("Skeleton has " + umaData.skeleton.boneCount + " bones, may be an error with slots!");
+					if (Debug.isDebugBuild)
+						Debug.LogWarning("Skeleton has " + umaData.skeleton.boneCount + " bones, may be an error with slots!");
 				}
 			}
+		}
+
+		public virtual void PreApply(UMAData umaData)
+		{
+			if (umaData)
+				umaData.PreApplyDNA();
 		}
 
 		public virtual void UpdateUMABody(UMAData umaData)

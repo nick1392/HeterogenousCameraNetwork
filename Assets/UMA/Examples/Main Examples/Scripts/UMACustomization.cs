@@ -78,7 +78,13 @@ namespace UMA.Examples
         // get the sliders and store for later use
         void Awake()
         {
-            HeightSlider = GameObject.Find("HeightSlider").GetComponent<Slider>();
+			// Find the panels and hide for now
+			DnaPanel = GameObject.Find("DnaEditorPanel");
+
+			if (DnaPanel == null || DnaPanel.activeSelf == false)
+				return;
+
+			HeightSlider = GameObject.Find("HeightSlider").GetComponent<Slider>();
             UpperMuscleSlider = GameObject.Find("UpperMuscleSlider").GetComponent<Slider>();
             UpperWeightSlider = GameObject.Find("UpperWeightSlider").GetComponent<Slider>();
             LowerMuscleSlider = GameObject.Find("LowerMuscleSlider").GetComponent<Slider>();
@@ -126,19 +132,14 @@ namespace UMA.Examples
             EyeSpacingSlider = GameObject.Find("EyeSpaceSlider").GetComponent<Slider>();
             LowCheekPosSlider = GameObject.Find("LowCheekPosSlider").GetComponent<Slider>();
 
-            // Find the panels and hide for now
-            DnaPanel = GameObject.Find("DnaEditorPanel");
-            //        DnaScrollPanel = GameObject.Find("ScrollPanel");
-            DnaPanel.SetActive(false);
+			DnaPanel.SetActive(false);
 
-#if UNITY_5 && !UNITY_5_1 && !UNITY_5_0
-            var oldUIMask = DnaPanel.GetComponent<Mask>();
+			var oldUIMask = DnaPanel.GetComponent<Mask>();
             if (oldUIMask != null)
             {
                 DestroyImmediate(oldUIMask);
                 DnaPanel.AddComponent<RectMask2D>();
             }
-#endif
 
             // Find the DNA hide button and hide it for now
             DnaHide = GameObject.Find("MessagePanel").GetComponentInChildren<Button>();
@@ -158,10 +159,10 @@ namespace UMA.Examples
 
         void Update()
         {
-            if (umaTutorialDna != null)
+            /*if (umaTutorialDna != null)
                 EyeSpacingSlider.interactable = true;
             else
-                EyeSpacingSlider.interactable = false;
+                EyeSpacingSlider.interactable = false;*/
 
             // Don't raycast if the editor is open
             if (umaData != null)
@@ -203,25 +204,32 @@ namespace UMA.Examples
             umaDna = umaData.GetDna<UMADnaHumanoid>();
             umaTutorialDna = umaData.GetDna<UMADnaTutorial>();
 
-            SetSliders();
-            SetCamera(true);
+			if (umaDna != null)
+			{
+				SetSliders();
+			}
+			//SetUpDNASliders();
+
+			SetCamera(true);
         }
 
         // Set the camera target and viewport
         private void SetCamera(bool show)
         {
+			if (DnaPanel == null)
+				return;
+
             if (show)
             {
                 DnaPanel.SetActive(true);
                 DnaHide.gameObject.SetActive(true);
-#if UNITY_5 && !UNITY_5_1 && !UNITY_5_0
+
                 // really Unity? Yes we change the value and set it back to trigger a ui recalculation... 
                 // because setting the damn game object active doesn't do that!
                 var rt = DnaPanel.GetComponent<RectTransform>();
                 var pos = rt.offsetMin;
                 rt.offsetMin = new Vector2(pos.x + 1, pos.y);
                 rt.offsetMin = pos;
-#endif
             }
             else
             {
@@ -261,6 +269,7 @@ namespace UMA.Examples
                 umaData.Dirty();
             }
         }
+
 
         // Set all of the sliders to the values contained in the UMA Character
         public void SetSliders()
@@ -362,5 +371,20 @@ namespace UMA.Examples
         public void OnEyeRotationChange() { if (umaDna != null) umaDna.eyeRotation = EyeRotationSlider.value; UpdateUMAShape(); }
         public void OnLowCheekPositionChange() { if (umaDna != null) umaDna.lowCheekPosition = LowCheekPosSlider.value; UpdateUMAShape(); }
         public void OnEyeSpacingChange() { if (umaTutorialDna != null) umaTutorialDna.eyeSpacing = EyeSpacingSlider.value; UpdateUMAShape(); }
+
+		public void PerformDNAChange(string dnaName, float dnaValue)
+		{
+			if(umaData != null)
+			{
+				foreach(UMADnaBase dna in umaData.umaRecipe.GetAllDna())
+				{
+					if(System.Array.IndexOf(dna.Names, dnaName) > -1)
+					{
+						int index = System.Array.IndexOf(dna.Names, dnaName);
+						dna.SetValue(index, dnaValue);
+					}
+				}
+			}
+		}
     }
 }

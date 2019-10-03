@@ -28,6 +28,29 @@ namespace UMA
 			get { return _defaultOverlayData; }
 		}
 
+        /// <summary>
+        /// returns true if the UMAData is in the update queue.
+        /// Note that this will return false if the UMA is currently being processed!
+        /// </summary>
+        /// <param name="umaToCheck"></param>
+        /// <returns></returns>
+        public abstract bool updatePending(UMAData umaToCheck);
+
+        /// <summary>
+        /// Returns true if the UMA is at pos 0 in the DirtyList -
+        /// this means it's the UMA that is currently being processed
+        /// </summary>
+        /// <param name="umaToCheck"></param>
+        /// <returns></returns>
+        public abstract bool updateProcessing(UMAData umaToCheck);
+
+        /// <summary>
+        /// removes the UMAData if it exists in the update queue.
+        /// Use this if you need to delete the UMA after scheduling an update for it.
+        /// </summary>
+        /// <param name="umaToRemove"></param>
+        public abstract void removeUMA(UMAData umaToRemove);
+
 		/// <summary>
 		/// Adds the dirty UMA to the update queue.
 		/// </summary>
@@ -172,8 +195,11 @@ namespace UMA
 					{
 						AnimatorState snapshot = new AnimatorState();
 						snapshot.SaveAnimatorState(animator);
-						UMAUtils.DestroySceneObject(animator.avatar);
-						SetAvatar(umaData, animator);
+						if (!umaData.KeepAvatar || animator.avatar == null)
+						{
+							UMAUtils.DestroySceneObject(animator.avatar);
+							SetAvatar(umaData, animator);
+						}
 						if(animator.runtimeAnimatorController != null)
 							snapshot.RestoreAnimatorState(animator);
 					}
@@ -192,6 +218,8 @@ namespace UMA
 		/// <param name="animator">Animator.</param>
 		public static void SetAvatar(UMAData umaData, Animator animator)
 		{
+			if (umaData.KeepAvatar && animator.avatar != null)
+				return;
 			var umaTPose = umaData.umaRecipe.raceData.TPose;
 
 			switch (umaData.umaRecipe.raceData.umaTarget)
@@ -208,27 +236,33 @@ namespace UMA
 
 		public static void DebugLogHumanAvatar(GameObject root, HumanDescription description)
 		{
-			Debug.Log("***", root);
+			if (Debug.isDebugBuild)
+				Debug.Log("***", root);
 			Dictionary<String, String> bones = new Dictionary<String, String>();
 			foreach (var sb in description.skeleton)
 			{
-				Debug.Log(sb.name);
+				if (Debug.isDebugBuild)
+					Debug.Log(sb.name);
 				bones[sb.name] = sb.name;
 			}
-			Debug.Log("----");
+			if (Debug.isDebugBuild)
+				Debug.Log("----");
 			foreach (var hb in description.human)
 			{
 				string boneName;
 				if (bones.TryGetValue(hb.boneName, out boneName))
 				{
-					Debug.Log(hb.humanName + " -> " + boneName);
+					if (Debug.isDebugBuild)
+						Debug.Log(hb.humanName + " -> " + boneName);
 				}
 				else
 				{
-					Debug.LogWarning(hb.humanName + " !-> " + hb.boneName);
+					if (Debug.isDebugBuild)
+						Debug.LogWarning(hb.humanName + " !-> " + hb.boneName);
 				}
 			}
-			Debug.Log("++++");
+			if (Debug.isDebugBuild)
+				Debug.Log("++++");
 		}
 
 		/// <summary>
@@ -243,6 +277,7 @@ namespace UMA
 			HumanDescription description = CreateHumanDescription(umaData, umaTPose);
 			//DebugLogHumanAvatar(umaData.gameObject, description);
 			Avatar res = AvatarBuilder.BuildHumanAvatar(umaData.gameObject, description);
+			res.name = umaData.name;
 			return res;
 		}
 
@@ -254,6 +289,7 @@ namespace UMA
 		public static Avatar CreateGenericAvatar(UMAData umaData)
 		{
 			Avatar res = AvatarBuilder.BuildGenericAvatar(umaData.gameObject, umaData.umaRecipe.GetRace().genericRootMotionTransformName);
+			res.name = umaData.name;
 			return res;
 		}
 
@@ -266,13 +302,13 @@ namespace UMA
 		public static HumanDescription CreateHumanDescription(UMAData umaData, UmaTPose umaTPose)
 		{
 			var res = new HumanDescription();
-			res.armStretch = 0;
-			res.feetSpacing = 0;
-			res.legStretch = 0;
-			res.lowerArmTwist = 0.2f;
-			res.lowerLegTwist = 1f;
-			res.upperArmTwist = 0.5f;
-			res.upperLegTwist = 0.1f;
+			res.armStretch = umaTPose.armStretch == 0.0f ? 0.05f : umaTPose.armStretch; // this is for compatiblity with the existing tpose. 
+			res.legStretch = umaTPose.legStretch == 0.0f ? 0.05f : umaTPose.legStretch; 
+			res.feetSpacing = umaTPose.feetSpacing;
+			res.lowerArmTwist = umaTPose.lowerArmTwist == 0.0f ? 0.5f : umaTPose.lowerArmTwist;
+			res.lowerLegTwist = umaTPose.lowerLegTwist == 0.0f ? 0.5f : umaTPose.lowerLegTwist;
+			res.upperArmTwist = umaTPose.upperArmTwist == 0.0f ? 0.5f : umaTPose.upperArmTwist;
+			res.upperLegTwist = umaTPose.upperLegTwist == 0.0f ? 0.5f : umaTPose.upperLegTwist;
 			res.skeleton = umaTPose.boneInfo;
 			res.human = umaTPose.humanInfo;
 
