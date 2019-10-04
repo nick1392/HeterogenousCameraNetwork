@@ -127,7 +127,6 @@ public class Person : MonoBehaviour
         closeRect = new Rect(20, 20, 140, 100);
         selection = transform.Find("New Sprite(Clone)");
         selection.gameObject.SetActive(false);
-        animator = GetComponent<Animator>();
         PersonCollection.Instance.People.Add(gameObject);
     }
 
@@ -135,8 +134,12 @@ public class Person : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (animator)
-            animator.SetFloat(offsetHash, Random.value);
+        if (!animator)
+        {
+            animator = GetComponent<Animator>();
+            if (animator)
+                animator.SetFloat(offsetHash, Random.value);
+        }
 
         totalForce = Vector3.zero;
 
