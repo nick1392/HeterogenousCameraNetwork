@@ -405,22 +405,6 @@ public class Person : MonoBehaviour
                     
                     var results = new NativeArray<RaycastHit>(numAngleDivisions, Allocator.Temp);
                     var commands = new NativeArray<RaycastCommand>(numAngleDivisions, Allocator.Temp);
-
-                    // Set the data of the first command
-                    Vector3 origin = Vector3.forward * -10;
-                    Vector3 direction = Vector3.forward;
-
-                    commands[0] = new RaycastCommand(origin, direction);
-
-                    // Schedule the batch of raycasts
-
-                    // Wait for the batch processing job to complete
-
-                    // Copy the result. If batchedHit.collider is null there was no hit
-                    RaycastHit batchedHit = results[0];
-
-                    // Dispose the buffers
-
                     for (int i = 0; i < escapeDirections.Length; i++)
                     {
                         commands[i] = new RaycastCommand(gameObject.transform.position + heightEye2, escapeDirections[i], escapeRange);
