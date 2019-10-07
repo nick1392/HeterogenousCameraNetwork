@@ -8,31 +8,49 @@ namespace Geometry
     {
         private Bounds bounds;
         private float xMin, xMax, zMin, zMax, width, depth;
+
         public float value;
+
         //private Renderer rend;
         private Mesh mymesh;
         private MeshRenderer myrend;
         private GameObject myobj;
+        private Material mymat;
         private float scaleX = 1f;
         private float scaleZ = 1f;
+        private Texture2D _texture2D;
+        private int i, j;
+        private Vector3 _thisPos;
 
 
-
-        public Cell(Vector2 center, Vector2 size, bool plot, Vector2 factor, Vector2 map_size)
+        public Cell(Vector2 center, Vector2 size, bool plot, Vector2 factor, Vector2 map_size, ref Texture2D texture2D,
+            int i, int j)
         {
-            bounds = new Bounds(new Vector3(center.x, GameObject.Find("Floor").transform.position.y + GameObject.Find("Floor").transform.localScale.y / 2f, center.y), new Vector3(size.x, 0f, size.y));
-            xMin = bounds.center.x - bounds.extents.x; xMax = bounds.center.x + bounds.extents.x;
-            zMin = bounds.center.z - bounds.extents.z; zMax = bounds.center.z + bounds.extents.z;
-            width = xMax - xMin; depth = zMax - zMin;
+            bounds = new Bounds(
+                new Vector3(center.x,
+                    GameObject.Find("Floor").transform.position.y +
+                    GameObject.Find("Floor").transform.localScale.y / 2f, center.y), new Vector3(size.x, 0f, size.y));
+            xMin = bounds.center.x - bounds.extents.x;
+            xMax = bounds.center.x + bounds.extents.x;
+            zMin = bounds.center.z - bounds.extents.z;
+            zMax = bounds.center.z + bounds.extents.z;
+            width = xMax - xMin;
+            depth = zMax - zMin;
             value = 0f;
-            if (plot)
-            {
-                myobj = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                myobj.transform.position = new Vector3(bounds.center.x + (map_size.x + scaleX) *factor.x, 0.1f, bounds.center.z + (map_size.y + scaleZ) * factor.y);
-                myobj.transform.localScale = new Vector3(0.1f * scaleX, 0.1f, 0.1f * scaleZ);
-                myobj.layer = 8;
-            }
+            this.i = i;
+            this.j = j;
+            _thisPos = new Vector3(bounds.center.x + (map_size.x + scaleX) * factor.x, 0.1f,
+                bounds.center.z + (map_size.y + scaleZ) * factor.y);
+//            if (plot)
+//            {
+//                myobj = GameObject.CreatePrimitive(PrimitiveType.Plane);
+//                myobj.transform.position = new Vector3(bounds.center.x + (map_size.x + scaleX) *factor.x, 0.1f, bounds.center.z + (map_size.y + scaleZ) * factor.y);
+//                myobj.transform.localScale = new Vector3(0.1f * scaleX, 0.1f, 0.1f * scaleZ);
+//                myobj.layer = 8;
+//                mymat = myobj.GetComponent<Renderer>().material;
+//            }
 
+            _texture2D = texture2D;
             //myobj.GetComponent<Renderer>().bounds.size.Set(size.x, 0f, size.y);
             //myobj.GetComponent<Renderer>().bounds.center.Set(center.x, GameObject.Find("Floor").transform.position.y + GameObject.Find("Floor").transform.localScale.y / 2f, center.y);
 
@@ -47,35 +65,39 @@ namespace Geometry
         public void Copy(Cell cell)
         {
             bounds = cell.bounds;
-            xMin = cell.xMin; xMax = cell.xMax;
-            zMin = cell.zMin; zMin = cell.zMax;
-            width = cell.width; depth = cell.depth;
+            xMin = cell.xMin;
+            xMax = cell.xMax;
+            zMin = cell.zMin;
+            zMin = cell.zMax;
+            width = cell.width;
+            depth = cell.depth;
             value = cell.value;
         }
 
-        public void SetValue(float set_value)
+        public void SetValue(float setValue)
         {
-            value = set_value;
+            value = setValue;
         }
 
         public void UpdateColor()
         {
-            myobj.GetComponent<Renderer>().material.color = new Color(1 - value, value,0);
+            _texture2D.SetPixel(i, j, new Color(1 - value, value, 0));
 
             //if (value != 0) Debug.Log(value);
         }
 
-		public void UpdateColorPriority()
-		{
-			myobj.GetComponent<Renderer>().material.color = new Color(value, 1 - value,0);
+        public void UpdateColorPriority()
+        {
+//			mymat.color = new Color(value, 1 - value,0);
+            _texture2D.SetPixel(i, j, new Color(value, 1 - value, 0));
+            //if (value != 0) Debug.Log(value);
+        }
 
-			//if (value != 0) Debug.Log(value);
-		}
-
-		public Vector3 GetPosition()
-		{
-			return myobj.transform.position;
-		}
+        public Vector3 GetPosition()
+        {
+            return _thisPos;
+//            return myobj.transform.position;
+        }
 
 
         /*public bool ContainsProjection(Vector3 coord, out Vector3 projectedPoint)//checks whether the cell contains the projected point
@@ -96,16 +118,20 @@ namespace Geometry
     }
 
     [System.Serializable]
-    public class Line //line with orientation vector which is the normal coming out of the surface on which the line is lying
+    public class
+        Line //line with orientation vector which is the normal coming out of the surface on which the line is lying
     {
-        public enum Axis { posX = 1, negX = -1, posZ = 2, negZ = -2 };
+        public enum Axis
+        {
+            posX = 1,
+            negX = -1,
+            posZ = 2,
+            negZ = -2
+        };
 
-        [SerializeField]
-        public readonly float min, max, lying, height;
-        [SerializeField]
-        public readonly Vector3 normal;
-        [SerializeField]
-        public readonly Axis normalName;
+        [SerializeField] public readonly float min, max, lying, height;
+        [SerializeField] public readonly Vector3 normal;
+        [SerializeField] public readonly Axis normalName;
         public float associatedProbability;
 
         public Vector3 MinPosition
@@ -122,6 +148,7 @@ namespace Geometry
                 }
             }
         }
+
         public Vector3 MaxPosition
         {
             get
@@ -151,24 +178,29 @@ namespace Geometry
                         normal = Vector3.right;
                         if (_min.z > _max.z)
                         {
-                            max = _min.z; min = _max.z;
+                            max = _min.z;
+                            min = _max.z;
                         }
                         else
                         {
-                            max = _max.z; min = _min.z;
+                            max = _max.z;
+                            min = _min.z;
                         }
                     }
+
                     if (_normal.x == -1)
                     {
                         normalName = Axis.negX;
                         normal = Vector3.left;
                         if (_min.z > _max.z)
                         {
-                            max = _min.z; min = _max.z;
+                            max = _min.z;
+                            min = _max.z;
                         }
                         else
                         {
-                            max = _max.z; min = _min.z;
+                            max = _max.z;
+                            min = _min.z;
                         }
                     }
                 }
@@ -183,32 +215,48 @@ namespace Geometry
                             normal = Vector3.forward;
                             if (_min.x > _max.x)
                             {
-                                max = _min.x; min = _max.x;
+                                max = _min.x;
+                                min = _max.x;
                             }
                             else
                             {
-                                max = _max.x; min = _min.x;
+                                max = _max.x;
+                                min = _min.x;
                             }
                         }
+
                         if (_normal.z == -1)
                         {
                             normalName = Axis.negZ;
                             normal = Vector3.back;
                             if (_min.x > _max.x)
                             {
-                                max = _min.x; min = _max.x;
+                                max = _min.x;
+                                min = _max.x;
                             }
                             else
                             {
-                                max = _max.x; min = _min.x;
+                                max = _max.x;
+                                min = _min.x;
                             }
                         }
                     }
-                    else { min = max = 0; normal = Vector3.zero; normalName = Axis.negX; }
+                    else
+                    {
+                        min = max = 0;
+                        normal = Vector3.zero;
+                        normalName = Axis.negX;
+                    }
                 }
-
             }
-            else { min = max = lying = 0; normal = Vector3.zero; normalName = Axis.negX; height = Mathf.Infinity; }
+            else
+            {
+                min = max = lying = 0;
+                normal = Vector3.zero;
+                normalName = Axis.negX;
+                height = Mathf.Infinity;
+            }
+
             associatedProbability = -1;
         }
 
@@ -217,12 +265,15 @@ namespace Geometry
             Bounds bounds = new Bounds();
             if (normalName == Axis.negX || normalName == Axis.posX)
             {
-                bounds.center = new Vector3(lying, height, (max + min) / 2f); bounds.size = new Vector3(0, 0, max - min);
+                bounds.center = new Vector3(lying, height, (max + min) / 2f);
+                bounds.size = new Vector3(0, 0, max - min);
             }
             else
             {
-                bounds.center = new Vector3((max + min) / 2f, height, lying); bounds.size = new Vector3(max - min, 0, 0);
+                bounds.center = new Vector3((max + min) / 2f, height, lying);
+                bounds.size = new Vector3(max - min, 0, 0);
             }
+
             return bounds.ClosestPoint(coordinates);
         }
     }
@@ -237,10 +288,7 @@ namespace Containers
 
         public int Length
         {
-            get
-            {
-                return worldPosition.Length;
-            }
+            get { return worldPosition.Length; }
         }
 
         public SolutionClass(int positionsNumber)

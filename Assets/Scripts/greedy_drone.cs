@@ -37,12 +37,18 @@ public class greedy_drone : MonoBehaviour {
 
     private int windowSize1;
 	private int time;
-    
 
+
+	private Bounds map;
+
+	private Cell[,] grid, gridConf, grid_position;
     // Use this for initialization
     void Start () {
-		
-	}
+		map = GameObject.Find("Floor").GetComponent<BoxCollider>().bounds;
+		grid = GameObject.Find("Map").GetComponent<GridController>().priorityGrid;
+		gridConf = GameObject.Find("Map").GetComponent<GridController>().overralConfidenceGrid;
+		grid_position = GameObject.Find("Map").GetComponent<GridController>().timeConfidenceGrid;
+    }
 
     private GridController _gridController;
 
@@ -80,13 +86,7 @@ public class greedy_drone : MonoBehaviour {
 
     void ThreeStepSearch()
     {
-        
-        Bounds map = GameObject.Find("Floor").GetComponent<BoxCollider>().bounds;
-
-        Vector3 onTheGroundProjection = map.ClosestPoint(drone.transform.position);
-
-        Cell[,] grid = GameObject.Find("Map").GetComponent<GridController>().priorityGrid;
-		Cell[,] gridConf = GameObject.Find("Map").GetComponent<GridController>().overralConfidenceGrid;
+	    Vector3 onTheGroundProjection = map.ClosestPoint(drone.transform.position);
 
         //declaring a fictious grid and initializing it, for quality of view of this camera
         float[,] proposedGrid = new float[grid.GetLength(0), grid.GetLength(1)];
@@ -181,11 +181,9 @@ public class greedy_drone : MonoBehaviour {
 		Vector2 index = max_index[Random.Range(0,max_index.Count)];
 
 		//Debug.Log("i = " + index.x + ", j =" + index.y + ", value = " +  proposedGrid[(int)index.x, (int)index.y]);
-		Cell[,] grid_position = GameObject.Find("Map").GetComponent<GridController>().timeConfidenceGrid;
 		//Debug.Log (drone.transform.position.y);
 		nextPosition = new Vector3(grid_position[(int)index.x, (int)index.y].GetPosition().x, drone.transform.position.y, grid_position[(int)index.x, (int)index.y].GetPosition().z);
 		//Debug.Log (nextPosition);
     }
-
-
+    
 }
