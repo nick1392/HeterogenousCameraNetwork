@@ -44,17 +44,20 @@ public class greedy_drone : MonoBehaviour {
 		
 	}
 
+    private GridController _gridController;
+
     void Awake()
     {
         drone = GetComponent<Rigidbody>();
         windowSize1 = 10;
+        _gridController = GameObject.Find("Map").GetComponent<GridController>();
     }
 
     // Update is called once per frame
     void Update ()
     {
 
-		time = GameObject.Find("Map").GetComponent<GridController>().currentTime;
+		time = _gridController.currentTime;
 
 		if (time % 2 == 0) 
 		{

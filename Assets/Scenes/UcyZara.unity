@@ -6491,6 +6491,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.94
       objectReference: {fileID: 0}
+    - target: {fileID: 114265866156721524, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d216bb91edc64412987986d3a508227b, type: 3}
 --- !u!1 &1680745006 stripped
@@ -6579,6 +6584,11 @@ PrefabInstance:
       propertyPath: destination
       value: 
       objectReference: {fileID: 882151916}
+    - target: {fileID: 114730759206622792, guid: 295cfe569c43d584db1decbb9de534d4,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1325540004358528, guid: 295cfe569c43d584db1decbb9de534d4, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -6707,7 +6717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walls: []
   ceilingTransform: {fileID: 0}
-  floorTransform: {fileID: 0}
+  floorTransform: {fileID: 714937272}
   mapBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -6718,7 +6728,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1700202832}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10a0851f12467c242ae6472a26945aa1, type: 3}
   m_Name: 
@@ -6726,7 +6736,7 @@ MonoBehaviour:
   currentTime: 0
   t_max: 45
   logMetrics: 1
-  plotMaps: 0
+  plotMaps: 1
   cellWidth: 1
   cellDepth: 1
   ped_max: 2
