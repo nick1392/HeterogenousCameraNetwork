@@ -461,6 +461,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 10
+  frameRate: 15
+  showDebugRays: 0
   personHit: []
   personHitSizeChecked: []
   boundingBoxes: []
@@ -698,6 +700,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 10
+  frameRate: 15
+  showDebugRays: 0
   personHit: []
   personHitSizeChecked: []
   boundingBoxes: []
@@ -4557,6 +4561,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 10
+  frameRate: 15
+  showDebugRays: 0
   personHit: []
   personHitSizeChecked: []
   boundingBoxes: []
@@ -5369,6 +5375,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 10
+  frameRate: 15
+  showDebugRays: 0
   personHit: []
   personHitSizeChecked: []
   boundingBoxes: []
@@ -6009,6 +6017,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 10
+  frameRate: 15
+  showDebugRays: 0
   personHit: []
   personHitSizeChecked: []
   boundingBoxes: []
@@ -6426,7 +6436,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1542548312462286, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
         type: 3}
@@ -6763,6 +6773,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 10
+  frameRate: 15
+  showDebugRays: 0
   personHit: []
   personHitSizeChecked: []
   boundingBoxes: []
