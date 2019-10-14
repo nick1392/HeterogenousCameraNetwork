@@ -65,7 +65,7 @@ public class GridController : MonoBehaviour
 
 
     private void
-        InitializeGrid(ref Cell[,] grid, bool plot, Vector2 factor, ref Texture2D texture2D) //intialise grid values
+        InitializeGrid(ref Cell[,] grid, bool plot, Vector2 factor, ref Texture2D texture2D, string name) //intialise grid values
     {
         MapController map = GameObject.Find("Map").GetComponent<MapController>();
 
@@ -79,6 +79,7 @@ public class GridController : MonoBehaviour
         texture2D = new Texture2D(numberOfCellsWidth, numberOfCellsDepth);
         texture2D.filterMode = FilterMode.Point;
         var myobj = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        myobj.name = name;
         myobj.transform.position =
             new Vector3(map.mapBounds.center.x + (map.mapBounds.size.x + 1) * factor.x, 0.1f,
                 map.mapBounds.center.z + (map.mapBounds.size.z + 1) * factor.y);
@@ -306,20 +307,28 @@ public class GridController : MonoBehaviour
 
     private void Start()
     {
-        InitializeGrid(ref observationGrid, plotMaps, new Vector2(-1f, 0f), ref observationTexture);
-        InitializeGrid(ref observationGridNewObs, plotMaps, new Vector2(-1f, 1f), ref overralConfidenceTextureNewObs);
-        InitializeGrid(ref timeConfidenceGrid, plotMaps, new Vector2(0f, 0f), ref timeConfidenceTexture);
-        InitializeGrid(ref timeConfidenceGridNewObs, plotMaps, new Vector2(0f, 1f), ref timeConfidenceTextureNewObs);
-        InitializeGrid(ref spatialConfidenceGrid, plotMaps, new Vector2(1f, 0f), ref spatialConfidenceTexture);
+        InitializeGrid(ref observationGrid, plotMaps, new Vector2(-1f, 0f),
+            ref observationTexture, "Observation");
+        InitializeGrid(ref observationGridNewObs, plotMaps, new Vector2(-1f, 1f),
+         ref observationTextureNewObs, "Observation New Observations");
+        InitializeGrid(ref timeConfidenceGrid, plotMaps, new Vector2(0f, 0f),
+         ref timeConfidenceTexture, "Time Confidence");
+        InitializeGrid(ref timeConfidenceGridNewObs, plotMaps, new Vector2(0f, 1f),
+         ref timeConfidenceTextureNewObs, "Time Confidence new Observations");
+        InitializeGrid(ref spatialConfidenceGrid, plotMaps, new Vector2(1f, 0f),
+         ref spatialConfidenceTexture, "Spatial Confidence");
         InitializeGrid(ref spatialConfidenceGridNewObs, plotMaps, new Vector2(1f, 1f),
-            ref spatialConfidenceTextureNewObs);
-        InitializeGrid(ref overralConfidenceGrid, plotMaps, new Vector2(2f, 0f), ref overralConfidenceTexture);
+            ref spatialConfidenceTextureNewObs, "Spatial Confidence New Observations");
+        InitializeGrid(ref overralConfidenceGrid, plotMaps, new Vector2(2f, 0f),
+         ref overralConfidenceTexture, "Overall Confidence");
         InitializeGrid(ref overralConfidenceGridNewObs, plotMaps, new Vector2(2f, 1f),
-            ref overralConfidenceTextureNewObs);
-        InitializeGrid(ref overralConfidenceGridTime, plotMaps, new Vector2(2f, -1f), ref overralConfidenceTextureTime);
-        InitializeGrid(ref priorityGrid, plotMaps, new Vector2(-2f, 0f), ref priorityTexture);
-
-        InitializeGrid(ref lastObsGrid, false, new Vector2(0f, 0f), ref lastObsTexture);
+            ref overralConfidenceTextureNewObs, "Overall confidence New Observations");
+        InitializeGrid(ref overralConfidenceGridTime, plotMaps, new Vector2(2f, -1f),
+         ref overralConfidenceTextureTime, "Overall Confidence Grid Time");
+        InitializeGrid(ref priorityGrid, plotMaps, new Vector2(-2f, 0f),
+         ref priorityTexture, "Priority");
+        InitializeGrid(ref lastObsGrid, false, new Vector2(0f, 0f),
+         ref lastObsTexture, "Last Observation");
         //GenerateCameras()
 
         mapVolume = GameObject.Find("Map").GetComponent<MapController>().mapBounds;
