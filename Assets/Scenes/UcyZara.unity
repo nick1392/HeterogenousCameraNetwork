@@ -482,6 +482,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextPosition: {x: 0, y: 0, z: 0}
   cam: {fileID: 44370007}
+  searchFrequency: 4
 --- !u!1 &44762603
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db3f4f488ae327408d101507c020357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  searchFrequency: 4
 --- !u!1 &131872156
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,6 +689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextPosition: {x: 0, y: 0, z: 0}
   cam: {fileID: 142547648}
+  searchFrequency: 4
 --- !u!114 &142547650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3293,8 +3296,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Texture: {fileID: 8400000, guid: 45c8cf138dcae6d4d8346164e41d2a8c, type: 2}
   m_UVRect:
     serializedVersion: 2
@@ -5442,6 +5443,63 @@ MonoBehaviour:
   - target: {fileID: 1214269467}
     probability: 1
     destroyAtDestination: 0
+--- !u!1 &1218555892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1218555893}
+  - component: {fileID: 1218555894}
+  m_Layer: 0
+  m_Name: Academy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1218555893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218555892}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.6000004, y: 0.60000014, z: -7.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1218555894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218555892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 365aec5fdb8c74e8296565abf03db2b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TrainingConfiguration:
+    width: 80
+    height: 80
+    qualityLevel: 1
+    timeScale: 100
+    targetFrameRate: -1
+  m_InferenceConfiguration:
+    width: 1280
+    height: 720
+    qualityLevel: 5
+    timeScale: 1
+    targetFrameRate: 60
+  resetParameters:
+    m_ResetParameters: []
 --- !u!4 &1232380484 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000011716641564, guid: 2965b439004fa8c48a8dd6736c4eab68,
@@ -6504,7 +6562,12 @@ PrefabInstance:
     - target: {fileID: 114265866156721524, guid: d216bb91edc64412987986d3a508227b,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54340177279288068, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d216bb91edc64412987986d3a508227b, type: 3}
@@ -6744,13 +6807,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTime: 0
-  t_max: 45
-  logMetrics: 1
+  t_max: 3
+  logMetrics: 0
   plotMaps: 1
-  cellWidth: 1
-  cellDepth: 1
+  cellWidth: 5
+  cellDepth: 5
   ped_max: 2
-  alfa: 1
+  alfa: 0.83
   spatialThreshold: 0.2
   peopleThreshold: 0.2
   people: []
@@ -7017,6 +7080,16 @@ PrefabInstance:
     - target: {fileID: 4740688250515864, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 114265866156721524, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54340177279288068, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d216bb91edc64412987986d3a508227b, type: 3}
@@ -7686,7 +7759,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1671305803}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2017233240
+--- !u!114 &2017233233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7695,9 +7768,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 2017233232}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce9d6e00d99bb41e18bffd27fa55ee62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+    resetOnDone: 1
+    onDemandDecision: 0
+    numberOfActionsBetweenDecisions: 30
+  movementForwardSpeedMission: 50
+--- !u!114 &2017233234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017233232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BrainParameters:
+    vectorObservationSize: 18
+    numStackedVectorObservations: 2
+    vectorActionSize: 01000000
+    vectorActionDescriptions: []
+    vectorActionSpaceType: 0
+  m_Model: {fileID: 0}
+  m_InferenceDevice: 0
+  m_UseHeuristic: 1
+  m_BehaviorName: Drone
+--- !u!114 &2017233240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017233232}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5db3f4f488ae327408d101507c020357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  searchFrequency: 4
 --- !u!1 &2017276972 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000014248265156, guid: 2965b439004fa8c48a8dd6736c4eab68,

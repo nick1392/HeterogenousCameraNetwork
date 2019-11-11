@@ -8,8 +8,8 @@ using Containers;
 
 public class GridController : MonoBehaviour
 {
-    public int currentTime; //current observation step id
-    public int t_max = 10; //time after which I have 0 confidence on the previous observation
+    public float currentTime; //current observation step id
+    public float t_max = 10; //time after which I have 0 confidence on the previous observation
 
     public bool logMetrics = false;
     public bool plotMaps = false;
@@ -65,7 +65,8 @@ public class GridController : MonoBehaviour
 
 
     private void
-        InitializeGrid(ref Cell[,] grid, bool plot, Vector2 factor, ref Texture2D texture2D, string name) //intialise grid values
+        InitializeGrid(ref Cell[,] grid, bool plot, Vector2 factor, ref Texture2D texture2D,
+            string name) //intialise grid values
     {
         MapController map = GameObject.Find("Map").GetComponent<MapController>();
 
@@ -299,36 +300,30 @@ public class GridController : MonoBehaviour
         }
     }
 
-    //Unity methods
-    private void OnEnable()
-    {
-        ;
-    }
-
     private void Start()
     {
         InitializeGrid(ref observationGrid, plotMaps, new Vector2(-1f, 0f),
             ref observationTexture, "Observation");
         InitializeGrid(ref observationGridNewObs, plotMaps, new Vector2(-1f, 1f),
-         ref observationTextureNewObs, "Observation New Observations");
+            ref observationTextureNewObs, "Observation New Observations");
         InitializeGrid(ref timeConfidenceGrid, plotMaps, new Vector2(0f, 0f),
-         ref timeConfidenceTexture, "Time Confidence");
+            ref timeConfidenceTexture, "Time Confidence");
         InitializeGrid(ref timeConfidenceGridNewObs, plotMaps, new Vector2(0f, 1f),
-         ref timeConfidenceTextureNewObs, "Time Confidence new Observations");
+            ref timeConfidenceTextureNewObs, "Time Confidence new Observations");
         InitializeGrid(ref spatialConfidenceGrid, plotMaps, new Vector2(1f, 0f),
-         ref spatialConfidenceTexture, "Spatial Confidence");
+            ref spatialConfidenceTexture, "Spatial Confidence");
         InitializeGrid(ref spatialConfidenceGridNewObs, plotMaps, new Vector2(1f, 1f),
             ref spatialConfidenceTextureNewObs, "Spatial Confidence New Observations");
         InitializeGrid(ref overralConfidenceGrid, plotMaps, new Vector2(2f, 0f),
-         ref overralConfidenceTexture, "Overall Confidence");
+            ref overralConfidenceTexture, "Overall Confidence");
         InitializeGrid(ref overralConfidenceGridNewObs, plotMaps, new Vector2(2f, 1f),
             ref overralConfidenceTextureNewObs, "Overall confidence New Observations");
         InitializeGrid(ref overralConfidenceGridTime, plotMaps, new Vector2(2f, -1f),
-         ref overralConfidenceTextureTime, "Overall Confidence Grid Time");
+            ref overralConfidenceTextureTime, "Overall Confidence Grid Time");
         InitializeGrid(ref priorityGrid, plotMaps, new Vector2(-2f, 0f),
-         ref priorityTexture, "Priority");
+            ref priorityTexture, "Priority");
         InitializeGrid(ref lastObsGrid, false, new Vector2(0f, 0f),
-         ref lastObsTexture, "Last Observation");
+            ref lastObsTexture, "Last Observation");
         //GenerateCameras()
 
         mapVolume = GameObject.Find("Map").GetComponent<MapController>().mapBounds;
@@ -344,7 +339,7 @@ public class GridController : MonoBehaviour
 
     private void Update()
     {
-        currentTime++;
+        currentTime += Time.deltaTime;
         //Debug.Log("current" + currentTime );
         //reset all newObs grids before new time step
     }
@@ -407,6 +402,7 @@ public class GridController : MonoBehaviour
                 //lastObsGrid,
             }
         }
+
         if (plotMaps)
         {
             observationTexture.Apply();
@@ -421,6 +417,7 @@ public class GridController : MonoBehaviour
             priorityTexture.Apply();
             lastObsTexture.Apply();
         }
+
         GlobalCoverageMetric();
         PeopleCoverageMetric();
         people.Clear();

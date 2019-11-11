@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using Geometry;
 
-public class greedy_drone : MonoBehaviour {
-
+public class greedy_drone : MonoBehaviour
+{
     Rigidbody drone;
 
     // drone variables
@@ -36,18 +35,21 @@ public class greedy_drone : MonoBehaviour {
     // Three step search variables
 
     private int windowSize1;
-	private int time;
+    private float time;
 
 
-	private Bounds map;
+    private Bounds map;
 
-	private Cell[,] grid, gridConf, grid_position;
+    private Cell[,] grid, gridConf, grid_position;
+    private Rigidbody _rb;
+
     // Use this for initialization
-    void Start () {
-		map = GameObject.Find("Floor").GetComponent<BoxCollider>().bounds;
-		grid = GameObject.Find("Map").GetComponent<GridController>().priorityGrid;
-		gridConf = GameObject.Find("Map").GetComponent<GridController>().overralConfidenceGrid;
-		grid_position = GameObject.Find("Map").GetComponent<GridController>().timeConfidenceGrid;
+    void Start()
+    {
+        map = GameObject.Find("Floor").GetComponent<BoxCollider>().bounds;
+        grid = GameObject.Find("Map").GetComponent<GridController>().priorityGrid;
+        gridConf = GameObject.Find("Map").GetComponent<GridController>().overralConfidenceGrid;
+        grid_position = GameObject.Find("Map").GetComponent<GridController>().timeConfidenceGrid;
     }
 
     private GridController _gridController;
@@ -60,21 +62,27 @@ public class greedy_drone : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    private float timeSinceLastSearch = 0;
+    [Tooltip("Times per second")]
+    public float searchFrequency = 4;
+    void Update()
     {
+        time = _gridController.currentTime;
+        if (drone.useGravity)
+            drone.AddRelativeForce(Vector3.up * 9.81f);
+        timeSinceLastSearch += Time.deltaTime;
+        if (timeSinceLastSearch > 1f/searchFrequency)
+        {
+            ThreeStepSearch();
+            mission = true;
+            timeSinceLastSearch = 0;
+        }
 
-		time = _gridController.currentTime;
-
-		if (time % 2 == 0) 
-		{
-			ThreeStepSearch();
-			mission = true;
-		}
-			
         // Missione
         if (mission)
         {
-            drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition, movementForwardSpeedMission * Time.deltaTime);
+            drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
+                movementForwardSpeedMission * Time.deltaTime);
             dist = Vector3.Distance(drone.transform.position, nextPosition);
             if (dist == 0)
             {
@@ -86,7 +94,7 @@ public class greedy_drone : MonoBehaviour {
 
     void ThreeStepSearch()
     {
-	    Vector3 onTheGroundProjection = map.ClosestPoint(drone.transform.position);
+        Vector3 onTheGroundProjection = map.ClosestPoint(drone.transform.position);
 
         //declaring a fictious grid and initializing it, for quality of view of this camera
         float[,] proposedGrid = new float[grid.GetLength(0), grid.GetLength(1)];
@@ -131,8 +139,8 @@ public class greedy_drone : MonoBehaviour {
 //        Debug.Log("x_ max = " + x_max);
 //        Debug.Log("y_ max = " + y_max);
 
-		List<Vector2Int> max_index = new List<Vector2Int>();
-		float max_value = 0;
+        List<Vector2Int> max_index = new List<Vector2Int>();
+        float max_value = 0;
 
         //float[,] window1 = new float[2*windowSize1 + 1, 2*windowSize1 + 1];
         for (int i = x_min; i < x_max; i++)
@@ -141,49 +149,56 @@ public class greedy_drone : MonoBehaviour {
             {
                 //window1[i - x_min, j - y_min] = proposedGrid[i, j];
 
-				int search1 = (int)(windowSize1 / 2);
+                int search1 = (int) (windowSize1 / 2);
 
-				x_min_search = i - search1;
-				y_min_search = j - search1;
-				x_max_search = i + search1;
-				y_max_search = j + search1;
+                x_min_search = i - search1;
+                y_min_search = j - search1;
+                x_max_search = i + search1;
+                y_max_search = j + search1;
 
-				if (x_min_search < 0) x_min_search = 0;
-				//Debug.Log("check if ceil or floor" + search1);
-				if (y_min_search < 0) y_min_search = 0;
-				if (x_max_search > proposedGrid.GetLength(0)) x_max_search = proposedGrid.GetLength(0);
-				if (y_max_search > proposedGrid.GetLength(1)) y_max_search = proposedGrid.GetLength(1);
+                if (x_min_search < 0) x_min_search = 0;
+                //Debug.Log("check if ceil or floor" + search1);
+                if (y_min_search < 0) y_min_search = 0;
+                if (x_max_search > proposedGrid.GetLength(0)) x_max_search = proposedGrid.GetLength(0);
+                if (y_max_search > proposedGrid.GetLength(1)) y_max_search = proposedGrid.GetLength(1);
 
                 for (int i_search = x_min_search; i_search < x_max_search; i_search++)
                 {
                     for (int j_search = y_min_search; j_search < y_max_search; j_search++)
                     {
-						proposedGrid[i, j] = proposedGrid[i, j] + Mathf.Abs( gridConf[i,j].value - grid[i, j].value); 
+                        proposedGrid[i, j] =
+                            proposedGrid[i, j] + Mathf.Abs(gridConf[i, j].value - grid[i, j].value); //eq 13
                     }
                 }
-				if (proposedGrid[i, j] > max_value)
-				{
 
-					max_index.Clear ();
-					max_value = proposedGrid [i, j];
-					max_index.Add (new Vector2Int (i, j));
+                #region DA CAMBIARE CON RL
 
-				}
-				if (proposedGrid [i, j] == max_value) 
-				{
-					max_index.Add (new Vector2Int (i, j));
-				}
+//TODO: APPLICARE RL QUA
+                if (proposedGrid[i, j] > max_value)
+                {
+                    max_index.Clear();
+                    max_value = proposedGrid[i, j];
+                    max_index.Add(new Vector2Int(i, j));
+                }
+
+                if (proposedGrid[i, j] == max_value)
+                {
+                    max_index.Add(new Vector2Int(i, j));
+                }
+
                 //Debug.Log("i = " + i + ", j =" + j + ", value = " +  proposedGrid[i, j]);
             }
         }
 
 
-		Vector2 index = max_index[Random.Range(0,max_index.Count)];
+        Vector2 index = max_index[Random.Range(0, max_index.Count)];
 
-		//Debug.Log("i = " + index.x + ", j =" + index.y + ", value = " +  proposedGrid[(int)index.x, (int)index.y]);
-		//Debug.Log (drone.transform.position.y);
-		nextPosition = new Vector3(grid_position[(int)index.x, (int)index.y].GetPosition().x, drone.transform.position.y, grid_position[(int)index.x, (int)index.y].GetPosition().z);
-		//Debug.Log (nextPosition);
+        #endregion
+
+        //Debug.Log("i = " + index.x + ", j =" + index.y + ", value = " +  proposedGrid[(int)index.x, (int)index.y]);
+        //Debug.Log (drone.transform.position.y);
+        nextPosition = new Vector3(grid_position[(int) index.x, (int) index.y].GetPosition().x,
+            drone.transform.position.y, grid_position[(int) index.x, (int) index.y].GetPosition().z);
+        //Debug.Log (nextPosition);
     }
-    
 }

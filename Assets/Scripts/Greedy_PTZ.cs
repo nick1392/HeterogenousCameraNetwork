@@ -31,16 +31,17 @@ public class Greedy_PTZ : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update ()
+	private float timeSinceLastSearch = 0;
+	[Tooltip("Times per second")]
+	public float searchFrequency = 4;
+	void Update()
 	{
-
-		time = GameObject.Find("Map").GetComponent<GridController>().currentTime;
-
-		if (time % 2 == 0) 
+		timeSinceLastSearch += Time.deltaTime;
+		if (timeSinceLastSearch > 1f/searchFrequency)
 		{
 			ThreeStepSearch();
+			timeSinceLastSearch = 0;
 		}
-			
 	}
 
 
