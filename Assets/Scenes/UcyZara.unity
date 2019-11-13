@@ -6813,8 +6813,9 @@ MonoBehaviour:
   cellWidth: 5
   cellDepth: 5
   ped_max: 2
-  alfa: 0.83
+  alfa: 0
   spatialThreshold: 0.2
+  GCM: 0
   peopleThreshold: 0.2
   people: []
 --- !u!1 &1727180088 stripped
@@ -7775,7 +7776,7 @@ MonoBehaviour:
     maxStep: 0
     resetOnDone: 1
     onDemandDecision: 0
-    numberOfActionsBetweenDecisions: 30
+    numberOfActionsBetweenDecisions: 1
   movementForwardSpeedMission: 50
 --- !u!114 &2017233234
 MonoBehaviour:
@@ -7790,14 +7791,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    vectorObservationSize: 18
-    numStackedVectorObservations: 2
-    vectorActionSize: 01000000
+    vectorObservationSize: 11
+    numStackedVectorObservations: 1
+    vectorActionSize: 09000000
     vectorActionDescriptions: []
     vectorActionSpaceType: 0
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 11400000, guid: 3bf47546078334710abd6a992e9fef56, type: 3}
   m_InferenceDevice: 0
-  m_UseHeuristic: 1
+  m_UseHeuristic: 0
   m_BehaviorName: Drone
 --- !u!114 &2017233240
 MonoBehaviour:

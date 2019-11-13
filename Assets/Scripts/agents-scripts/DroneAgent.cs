@@ -26,8 +26,7 @@ public class DroneAgent : Agent
     private int CollisionSensingDistance = 5;
 
     // Mission variables
-[SerializeField]
-    private float movementForwardSpeedMission = 20;
+    [SerializeField] private float movementForwardSpeedMission = 20;
     private static float rotationDiff;
     private Vector3 nextPosition;
     private Quaternion nextRotation;
@@ -42,7 +41,7 @@ public class DroneAgent : Agent
 
 
     private Bounds map;
-    
+
     private Rigidbody _rb;
     private GridController _gridController;
 
@@ -57,12 +56,12 @@ public class DroneAgent : Agent
         drone = GetComponent<Rigidbody>();
         windowSize1 = 10;
     }
-    
+
 
     float GetCellValue(Cell[,] grid, int x, int y)
     {
         if (x < 0 || y < 0 || x >= grid.GetLength(0) || y >= grid.GetLength(1))
-            return 0;
+            return int.MaxValue;
         return grid[x, y].value;
     }
 
@@ -100,15 +99,36 @@ public class DroneAgent : Agent
             GetCellValue(grid, x_coord + 1, y_coord),
         };
     }
-    
+
     public override void CollectObservations()
     {
-        (int x_coord,int y_coord) = UpdateCoords();
+//        Debug.Log("looo");
+        (int x_coord, int y_coord) = UpdateCoords();
 
-        //P_t
-        AddVectorObs(GetCells(_gridController.priorityGrid, x_coord, y_coord));
-        //F_t
-        AddVectorObs(GetCells(_gridController.overralConfidenceGrid, x_coord, y_coord));
+//        //P_t
+//        AddVectorObs(GetCells(_gridController.priorityGrid, x_coord, y_coord));
+//        //F_t
+//        AddVectorObs(GetCells(_gridController.overralConfidenceGrid, x_coord, y_coord));
+        List<float> ft = GetCells(_gridController.overralConfidenceGrid, x_coord, y_coord);
+        List<float> pt_prec = GetCells(_gridController.priorityGrid_prec, x_coord, y_coord);
+        for (int i = 0; i < ft.Count; i++)
+        {
+            AddVectorObs(ft[i] - pt_prec[i]);
+        }
+
+        List<int> actionMask = new List<int>();
+        if (x_coord + 1 > _gridController.priorityGrid.GetLength(0))
+            actionMask.AddRange(new[] {k_Right, k_TopRight, k_BottomRight});
+        if (x_coord - 1 < 0)
+            actionMask.AddRange(new[] {k_Left, k_TopLeft, k_BottomLeft});
+        if (y_coord + 1 > _gridController.priorityGrid.GetLength(1))
+            actionMask.AddRange(new[] {k_Up, k_TopLeft, k_TopRight});
+        if (y_coord - 1 < 0)
+            actionMask.AddRange(new[] {k_Down, k_BottomLeft, k_BottomRight});
+        SetActionMask(actionMask.Distinct());
+
+        AddVectorObs(drone.position.x);
+        AddVectorObs(drone.position.z);
     }
 
     private const int k_NoAction = 0; // do nothing!
@@ -121,9 +141,12 @@ public class DroneAgent : Agent
     private const int k_BottomLeft = 7;
     private const int k_BottomRight = 8;
 
+    private float lastTime;
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        AddReward(-0.01f);
+//        Debug.Log("Act " + (Time.time-lastTime));
+//        lastTime = Time.time;
+////        AddReward(-0.01f);
         var action = Mathf.FloorToInt(vectorAction[0]);
 
         int x = 0;
@@ -133,6 +156,7 @@ public class DroneAgent : Agent
         {
             case k_NoAction:
                 x = y = 0;
+                AddReward(-0.01f);
                 break;
             case k_Right:
                 x = 1;
@@ -163,35 +187,45 @@ public class DroneAgent : Agent
             default:
                 throw new ArgumentException("Invalid action value");
         }
+
         (int x_coord, int y_coord) = UpdateCoords();
-        float reward = GetCells(_gridController.priorityGrid, x_coord, y_coord).Sum() -
-                       GetCells(_gridController.priorityGrid, x_coord + x, y_coord + y).Sum();
-        AddReward(reward);
-        nextPosition = new Vector3(_gridController.timeConfidenceGrid[x_coord+x, y_coord+y].GetPosition().x,
-            drone.transform.position.y, _gridController.timeConfidenceGrid[x_coord+x, y_coord+y].GetPosition().z);
+//        float reward = GetCells(_gridController.priorityGrid, x_coord, y_coord).Sum() -
+//                       GetCells(_gridController.priorityGrid, x_coord + x, y_coord + y).Sum();
+        AddReward(_gridController.GCM / 100f);
+        if (_gridController.timeConfidenceGrid.GetLength(0) < x_coord + x ||
+            _gridController.timeConfidenceGrid.GetLength(1) < y_coord + y ||
+            x_coord + x < 0 || y_coord + y < 0)
+        {
+            AddReward(-9999999);
+            Done();
+            return;
+        }
+        
+        nextPosition = new Vector3(_gridController.timeConfidenceGrid[x_coord + x, y_coord + y].GetPosition().x,
+            drone.transform.position.y, _gridController.timeConfidenceGrid[x_coord + x, y_coord + y].GetPosition().z);
 
         mission = true;
     }
-    
+
     public override float[] Heuristic()
     {
         if (Input.GetKey(KeyCode.D))
-            return new float[] { k_Right };
+            return new float[] {k_Right};
         if (Input.GetKey(KeyCode.W))
-            return new float[] { k_Up };
+            return new float[] {k_Up};
         if (Input.GetKey(KeyCode.A))
-            return new float[] { k_Left };
+            return new float[] {k_Left};
         if (Input.GetKey(KeyCode.X))
-            return new float[] { k_Down };
+            return new float[] {k_Down};
         if (Input.GetKey(KeyCode.E))
-            return new float[] { k_TopRight };
+            return new float[] {k_TopRight};
         if (Input.GetKey(KeyCode.Q))
-            return new float[] { k_TopLeft };
+            return new float[] {k_TopLeft};
         if (Input.GetKey(KeyCode.Z))
-            return new float[] { k_BottomLeft };
+            return new float[] {k_BottomLeft};
         if (Input.GetKey(KeyCode.C))
-            return new float[] { k_BottomRight };
-        return new float[] { k_NoAction };
+            return new float[] {k_BottomRight};
+        return new float[] {k_NoAction};
     }
 
     public void Update()
@@ -207,10 +241,14 @@ public class DroneAgent : Agent
                 mission = false;
             }
         }
+
+        if (Time.time > 30)
+            Done();
     }
-    
+
     public override void AgentReset()
     {
+        _gridController.Reset();
         transform.position = new Vector3(Random.Range(-22f, 22f), 6.55f, Random.Range(-22f, 22f));
     }
 }

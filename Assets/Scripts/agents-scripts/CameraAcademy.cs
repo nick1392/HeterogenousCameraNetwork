@@ -5,5 +5,8 @@ using UnityEngine;
 
 public class CameraAcademy : Academy
 {
-   
+    public override void InitializeAcademy()
+    {
+        Monitor.SetActive(true);
+    }
 }

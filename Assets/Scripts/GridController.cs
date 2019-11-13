@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +24,8 @@ public class GridController : MonoBehaviour
         spatialConfidenceGridNewObs,
         timeConfidenceGridNewObs,
         lastObsGrid,
-        observationGridNewObs;
+        observationGridNewObs,
+        priorityGrid, priorityGrid_prec;
 
     Texture2D observationTexture,
         timeConfidenceTexture,
@@ -34,11 +36,8 @@ public class GridController : MonoBehaviour
         spatialConfidenceTextureNewObs,
         timeConfidenceTextureNewObs,
         lastObsTexture,
-        observationTextureNewObs;
-
-    public Cell[,] priorityGrid;
-
-    private Texture2D priorityTexture;
+        observationTextureNewObs,
+        priorityTexture, priorityTexture_prec;
 
     public float cellWidth = 1f, cellDepth = 1f;
 
@@ -49,7 +48,9 @@ public class GridController : MonoBehaviour
 
     // Variable for metrics
     public float spatialThreshold = 0.2f;
-    private float GCM, PCM;
+
+    public float GCM;
+    float PCM;
     private int numberOfCellsWidth, numberOfCellsDepth;
 
     public float peopleThreshold = 0.2f;
@@ -81,6 +82,7 @@ public class GridController : MonoBehaviour
         texture2D.filterMode = FilterMode.Point;
         var myobj = GameObject.CreatePrimitive(PrimitiveType.Plane);
         myobj.name = name;
+        myobj.transform.SetParent(transform);
         myobj.transform.position =
             new Vector3(map.mapBounds.center.x + (map.mapBounds.size.x + 1) * factor.x, 0.1f,
                 map.mapBounds.center.z + (map.mapBounds.size.z + 1) * factor.y);
@@ -209,19 +211,6 @@ public class GridController : MonoBehaviour
         //Debug.Log("new obs value = " + observationGridNewObs[i, j].value);
     }
 
-    private void UpdatePriorityGrid()
-    {
-        for (int i = 0; i < numberOfCellsWidth; i++)
-        {
-            for (int j = 0; j < numberOfCellsDepth; j++)
-            {
-                priorityGrid[i, j]
-                    .SetValue(alfa * observationGrid[i, j].value +
-                              (1 - alfa) * 0.5f); // (1 - alfa) * (1 - overralConfidenceGrid[i,j].value));
-            }
-        }
-    }
-
     private void GlobalCoverageMetric()
     {
         int conf = 0;
@@ -300,6 +289,33 @@ public class GridController : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        for (int i = 0; i < numberOfCellsWidth; i++)
+        {
+            for (int j = 0; j < numberOfCellsDepth; j++)
+            {
+                observationGrid[i,j].SetValue(0);
+                timeConfidenceGrid[i,j].SetValue(0);
+                spatialConfidenceGrid[i,j].SetValue(0);
+                overralConfidenceGrid[i,j].SetValue(0);
+                overralConfidenceGridTime[i,j].SetValue(0);
+                overralConfidenceGridNewObs[i,j].SetValue(0);
+                spatialConfidenceGridNewObs[i,j].SetValue(0);
+                timeConfidenceGridNewObs[i,j].SetValue(0);
+                lastObsGrid[i,j].SetValue(-t_max);
+                observationGridNewObs[i,j].SetValue(0);
+            }
+        }
+        currentTime = 0;
+        GCM = 0;
+        PCM = 0;
+        peopleHistory = 0;
+        peopleCovered = 0;
+        peopleTimeCount = 0;
+        
+    }
+
     private void Start()
     {
         InitializeGrid(ref observationGrid, plotMaps, new Vector2(-1f, 0f),
@@ -322,19 +338,16 @@ public class GridController : MonoBehaviour
             ref overralConfidenceTextureTime, "Overall Confidence Grid Time");
         InitializeGrid(ref priorityGrid, plotMaps, new Vector2(-2f, 0f),
             ref priorityTexture, "Priority");
+        InitializeGrid(ref priorityGrid_prec, plotMaps, new Vector2(-3f, 0f),
+            ref priorityTexture_prec, "Priority -1");
         InitializeGrid(ref lastObsGrid, false, new Vector2(0f, 0f),
             ref lastObsTexture, "Last Observation");
         //GenerateCameras()
 
         mapVolume = GameObject.Find("Map").GetComponent<MapController>().mapBounds;
         map = GameObject.Find("Floor").GetComponent<BoxCollider>().bounds;
-
-        currentTime = 0;
-        GCM = 0;
-        PCM = 0;
-        peopleHistory = 0;
-        peopleCovered = 0;
-        peopleTimeCount = 0;
+        
+        Reset();
     }
 
     private void Update()
@@ -379,7 +392,8 @@ public class GridController : MonoBehaviour
                     overralConfidenceGrid[i, j].SetValue(overralConfidenceGridTime[i, j].value);
                     //Debug.Log("HEREEEEEE: Time");
                 }
-
+                
+                priorityGrid_prec[i, j].SetValue(priorityGrid[i,j].value);
                 priorityGrid[i, j].SetValue(alfa * observationGrid[i, j].value +
                                             (1 - alfa) * (1 - overralConfidenceGrid[i, j].value));
 
