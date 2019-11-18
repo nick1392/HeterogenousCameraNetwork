@@ -7775,7 +7775,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
     resetOnDone: 1
-    onDemandDecision: 0
+    onDemandDecision: 1
     numberOfActionsBetweenDecisions: 1
   movementForwardSpeedMission: 50
 --- !u!114 &2017233234
@@ -7796,7 +7796,7 @@ MonoBehaviour:
     vectorActionSize: 09000000
     vectorActionDescriptions: []
     vectorActionSpaceType: 0
-  m_Model: {fileID: 11400000, guid: 3bf47546078334710abd6a992e9fef56, type: 3}
+  m_Model: {fileID: 11400000, guid: e144d1ed9bfe94ebbb7e041fc6989a65, type: 3}
   m_InferenceDevice: 0
   m_UseHeuristic: 0
   m_BehaviorName: Drone

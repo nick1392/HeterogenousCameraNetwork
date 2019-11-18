@@ -117,18 +117,18 @@ public class DroneAgent : Agent
         }
 
         List<int> actionMask = new List<int>();
-        if (x_coord + 1 > _gridController.priorityGrid.GetLength(0))
+        if (x_coord + 1 >= _gridController.priorityGrid.GetLength(0))
             actionMask.AddRange(new[] {k_Right, k_TopRight, k_BottomRight});
         if (x_coord - 1 < 0)
             actionMask.AddRange(new[] {k_Left, k_TopLeft, k_BottomLeft});
-        if (y_coord + 1 > _gridController.priorityGrid.GetLength(1))
+        if (y_coord + 1 >= _gridController.priorityGrid.GetLength(1))
             actionMask.AddRange(new[] {k_Up, k_TopLeft, k_TopRight});
         if (y_coord - 1 < 0)
             actionMask.AddRange(new[] {k_Down, k_BottomLeft, k_BottomRight});
         SetActionMask(actionMask.Distinct());
 
-        AddVectorObs(drone.position.x);
-        AddVectorObs(drone.position.z);
+        AddVectorObs(x_coord);
+        AddVectorObs(y_coord);
     }
 
     private const int k_NoAction = 0; // do nothing!
@@ -142,6 +142,9 @@ public class DroneAgent : Agent
     private const int k_BottomRight = 8;
 
     private float lastTime;
+
+    private float lastGCM = -1;
+    private int decisions = 0;
     public override void AgentAction(float[] vectorAction, string textAction)
     {
 //        Debug.Log("Act " + (Time.time-lastTime));
@@ -156,7 +159,6 @@ public class DroneAgent : Agent
         {
             case k_NoAction:
                 x = y = 0;
-                AddReward(-0.01f);
                 break;
             case k_Right:
                 x = 1;
@@ -189,11 +191,14 @@ public class DroneAgent : Agent
         }
 
         (int x_coord, int y_coord) = UpdateCoords();
-//        float reward = GetCells(_gridController.priorityGrid, x_coord, y_coord).Sum() -
-//                       GetCells(_gridController.priorityGrid, x_coord + x, y_coord + y).Sum();
-        AddReward(_gridController.GCM / 100f);
-        if (_gridController.timeConfidenceGrid.GetLength(0) < x_coord + x ||
-            _gridController.timeConfidenceGrid.GetLength(1) < y_coord + y ||
+
+        float gcm = _gridController.GlobalCoverageMetric_Current();
+        if (lastGCM != -1)
+            SetReward(gcm - lastGCM);
+        if (x == 0 && y == 0)
+            AddReward(-0.01f);
+        if (_gridController.timeConfidenceGrid.GetLength(0) <= x_coord + x ||
+            _gridController.timeConfidenceGrid.GetLength(1) <= y_coord + y ||
             x_coord + x < 0 || y_coord + y < 0)
         {
             AddReward(-9999999);
@@ -205,6 +210,8 @@ public class DroneAgent : Agent
             drone.transform.position.y, _gridController.timeConfidenceGrid[x_coord + x, y_coord + y].GetPosition().z);
 
         mission = true;
+        lastGCM = gcm;
+        decisions++;
     }
 
     public override float[] Heuristic()
@@ -228,22 +235,32 @@ public class DroneAgent : Agent
         return new float[] {k_NoAction};
     }
 
+    private bool waitingForMission = false;
     public void Update()
     {
         // Missione
-        if (mission)
-        {
-            drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
-                movementForwardSpeedMission * Time.deltaTime);
-            dist = Vector3.Distance(drone.transform.position, nextPosition);
-            if (dist == 0)
+            if (mission)
             {
-                mission = false;
+                drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
+                    movementForwardSpeedMission * Time.deltaTime);
+                dist = Vector3.Distance(drone.transform.position, nextPosition);
+                if (Math.Abs(dist) < 0.001f)
+                {
+                    mission = false;
+                    RequestDecision();
+                }
             }
-        }
+            else
+            {
+                RequestDecision();
+            }
 
-        if (Time.time > 30)
-            Done();
+            if (Time.time > 30f)
+            {
+                Debug.Log("Decisions:" + decisions);
+                decisions = 0;
+                Done();
+            }
     }
 
     public override void AgentReset()

@@ -230,6 +230,27 @@ public class GridController : MonoBehaviour
             ); //(GCM + conf / numberOfCellsWidth * numberOfCellsDepth)/(currentTime + 1);
         if (logMetrics) Debug.Log("GCM = " + GCM / (currentTime + 1));
     }
+    
+    public float GlobalCoverageMetric_Current()
+    {
+        float gcm_curr = 0f;
+        int conf = 0;
+        for (int i = 0; i < numberOfCellsWidth; i++)
+        {
+            for (int j = 0; j < numberOfCellsDepth; j++)
+            {
+                if (overralConfidenceGrid[i, j].value > spatialThreshold)
+                {
+                    conf += 1;
+                }
+            }
+        }
+
+        gcm_curr = (conf / (float)(numberOfCellsWidth *
+                            numberOfCellsDepth)
+        ); //(GCM + conf / numberOfCellsWidth * numberOfCellsDepth)/(currentTime + 1);
+        return gcm_curr;
+    }
 
     private void PeopleCoverageMetric()
     {
