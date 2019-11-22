@@ -130,10 +130,12 @@ public class CamerasManager : MonoBehaviour
                             //Debug.Log(person.name);
                             //Debug.Log(maxTrajectories.ToString());
                             //If a maximum number of trajectories has been reached
+                            #if UNITY_EDITOR
                             if (limitTrajectories && person.name.Contains(maxTrajectories.ToString()))
                             {
                                 EditorApplication.isPlaying = false;
                             }
+                            #endif
                             Transform targetCam = person.transform.Find("TargetCamera");
                             Transform head = person.transform.Find("Root");
                             while (head != null && head.gameObject.name != "Head")

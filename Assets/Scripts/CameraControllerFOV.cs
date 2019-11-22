@@ -378,18 +378,27 @@ public class CameraControllerFOV : MonoBehaviour
     }
 
     private float timeSinceLastFrame = 0;
+    
+    [SerializeField]private bool overrideForTraining;
     private void Update()
     {
+        if (overrideForTraining)
+            return;
         if (timeSinceLastFrame >= (1f / frameRate))
         {
-            timeSinceLastFrame = 0;
-            personHit.Clear();
-            boundingBoxes.Clear();
-            personHitSizeChecked.Clear();
-            FixCameraRes();
-            FillVisibilityGrid();
+            Project();
         }
 
         timeSinceLastFrame += Time.deltaTime;
+    }
+
+    public void Project()
+    {
+        timeSinceLastFrame = 0;
+        personHit.Clear();
+        boundingBoxes.Clear();
+        personHitSizeChecked.Clear();
+        FixCameraRes();
+        FillVisibilityGrid();
     }
 }

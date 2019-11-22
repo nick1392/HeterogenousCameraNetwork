@@ -4,4 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/UcyZara.unity
+    guid: cd85d21d20142448eb0d2d36f6f80f64
+  m_configObjects: {}

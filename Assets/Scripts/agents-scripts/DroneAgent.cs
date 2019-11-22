@@ -9,10 +9,11 @@ using Random = UnityEngine.Random;
 
 public class DroneAgent : Agent
 {
-    [Header("Specific to Drone cameras")] Rigidbody drone;
+    [Header("Specific to Drone cameras")] public CameraControllerFOV ccfov;
+
+    Rigidbody drone;
 
     // drone variables
-
     private float movementForwardSpeed = 5;
     private float movementRightSpeed = 5;
 
@@ -44,6 +45,7 @@ public class DroneAgent : Agent
 
     private Rigidbody _rb;
     private GridController _gridController;
+    public int VisionSize = 4;
 
     private void Awake()
     {
@@ -55,13 +57,14 @@ public class DroneAgent : Agent
     {
         drone = GetComponent<Rigidbody>();
         windowSize1 = 10;
+//        RequestDecision();
     }
 
 
     float GetCellValue(Cell[,] grid, int x, int y)
     {
         if (x < 0 || y < 0 || x >= grid.GetLength(0) || y >= grid.GetLength(1))
-            return int.MaxValue;
+            return 1;
         return grid[x, y].value;
     }
 
@@ -86,25 +89,21 @@ public class DroneAgent : Agent
 
     List<float> GetCells(Cell[,] grid, int x_coord, int y_coord)
     {
-        return new List<float>()
+        var list = new List<float>();
+        var obsSize = VisionSize;
+        for (int i = x_coord - obsSize; i <= x_coord + obsSize; i++)
         {
-            GetCellValue(grid, x_coord - 1, y_coord - 1),
-            GetCellValue(grid, x_coord - 1, y_coord),
-            GetCellValue(grid, x_coord - 1, y_coord + 1),
-            GetCellValue(grid, x_coord, y_coord),
-            GetCellValue(grid, x_coord, y_coord - 1),
-            GetCellValue(grid, x_coord, y_coord + 1),
-            GetCellValue(grid, x_coord + 1, y_coord + 1),
-            GetCellValue(grid, x_coord + 1, y_coord - 1),
-            GetCellValue(grid, x_coord + 1, y_coord),
-        };
+            for (int j = y_coord - obsSize; j <= y_coord + obsSize; j++)
+                list.Add(GetCellValue(grid, i, j));
+        }
+
+        return list;
     }
 
     public override void CollectObservations()
     {
 //        Debug.Log("looo");
         (int x_coord, int y_coord) = UpdateCoords();
-
 //        //P_t
 //        AddVectorObs(GetCells(_gridController.priorityGrid, x_coord, y_coord));
 //        //F_t
@@ -116,6 +115,8 @@ public class DroneAgent : Agent
             AddVectorObs(ft[i] - pt_prec[i]);
         }
 
+//        AddVectorObs(x_coord);
+//        AddVectorObs(y_coord);
         List<int> actionMask = new List<int>();
         if (x_coord + 1 >= _gridController.priorityGrid.GetLength(0))
             actionMask.AddRange(new[] {k_Right, k_TopRight, k_BottomRight});
@@ -126,9 +127,6 @@ public class DroneAgent : Agent
         if (y_coord - 1 < 0)
             actionMask.AddRange(new[] {k_Down, k_BottomLeft, k_BottomRight});
         SetActionMask(actionMask.Distinct());
-
-        AddVectorObs(x_coord);
-        AddVectorObs(y_coord);
     }
 
     private const int k_NoAction = 0; // do nothing!
@@ -144,7 +142,20 @@ public class DroneAgent : Agent
     private float lastTime;
 
     private float lastGCM = -1;
-    private int decisions = 0;
+    private int decisions = 0, requestedDecisions = 0;
+
+    public bool training = false;
+
+    private void OnDrawGizmos()
+    {
+        if (!_gridController)
+            return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(transform.position, new Vector3(_gridController.cellWidth*VisionSize*2,0.1f, _gridController.cellDepth*VisionSize*2));
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireCube(transform.position, new Vector3(_gridController.cellWidth*3,0.1f, _gridController.cellDepth*3));
+    }
+
     public override void AgentAction(float[] vectorAction, string textAction)
     {
 //        Debug.Log("Act " + (Time.time-lastTime));
@@ -192,24 +203,35 @@ public class DroneAgent : Agent
 
         (int x_coord, int y_coord) = UpdateCoords();
 
-        float gcm = _gridController.GlobalCoverageMetric_Current();
-        if (lastGCM != -1)
-            SetReward(gcm - lastGCM);
-        if (x == 0 && y == 0)
-            AddReward(-0.01f);
-        if (_gridController.timeConfidenceGrid.GetLength(0) <= x_coord + x ||
-            _gridController.timeConfidenceGrid.GetLength(1) <= y_coord + y ||
-            x_coord + x < 0 || y_coord + y < 0)
-        {
-            AddReward(-9999999);
-            Done();
-            return;
-        }
-        
         nextPosition = new Vector3(_gridController.timeConfidenceGrid[x_coord + x, y_coord + y].GetPosition().x,
             drone.transform.position.y, _gridController.timeConfidenceGrid[x_coord + x, y_coord + y].GetPosition().z);
+        //
+
+        if (training)
+        {
+            drone.transform.position = nextPosition;
+            ccfov.Project();
+        }
 
         mission = true;
+        float gcm = _gridController.GlobalCoverageMetric_Current();
+        if (lastGCM != -1)
+        {
+            SetReward(gcm - lastGCM - 0.1f);
+        }
+
+//        if (!training)
+            Debug.Log(GetReward());
+//        if (x == 0 && y == 0)
+//            AddReward(-0.01f);
+//        if (_gridController.timeConfidenceGrid.GetLength(0) <= x_coord + x ||
+//            _gridController.timeConfidenceGrid.GetLength(1) <= y_coord + y ||
+//            x_coord + x < 0 || y_coord + y < 0)
+//        {
+//            AddReward(-9999999);
+//            Done();
+//            return;
+//        }
         lastGCM = gcm;
         decisions++;
     }
@@ -235,37 +257,32 @@ public class DroneAgent : Agent
         return new float[] {k_NoAction};
     }
 
-    private bool waitingForMission = false;
     public void Update()
     {
-        // Missione
+        if (!training)
             if (mission)
             {
                 drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
                     movementForwardSpeedMission * Time.deltaTime);
                 dist = Vector3.Distance(drone.transform.position, nextPosition);
-                if (Math.Abs(dist) < 0.001f)
+                if (Math.Abs(dist) < 0.01f)
                 {
                     mission = false;
                     RequestDecision();
+                    requestedDecisions++;
                 }
             }
             else
             {
                 RequestDecision();
-            }
-
-            if (Time.time > 30f)
-            {
-                Debug.Log("Decisions:" + decisions);
-                decisions = 0;
-                Done();
+                requestedDecisions++;
             }
     }
 
     public override void AgentReset()
     {
         _gridController.Reset();
-        transform.position = new Vector3(Random.Range(-22f, 22f), 6.55f, Random.Range(-22f, 22f));
+        decisions = requestedDecisions = 0;
+        transform.position = new Vector3(Random.Range(-21f, 21f), 6.55f, Random.Range(-21f, 21f));
     }
 }

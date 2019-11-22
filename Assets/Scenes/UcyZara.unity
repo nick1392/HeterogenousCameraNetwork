@@ -468,6 +468,7 @@ MonoBehaviour:
   boundingBoxes: []
   margin: 0
   cam: {fileID: 44370012}
+  overrideForTraining: 0
 --- !u!114 &44370016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,6 +711,7 @@ MonoBehaviour:
   boundingBoxes: []
   margin: 0
   cam: {fileID: 142547656}
+  overrideForTraining: 0
 --- !u!114 &142547651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4569,6 +4571,7 @@ MonoBehaviour:
   boundingBoxes: []
   margin: 0
   cam: {fileID: 1048241350}
+  overrideForTraining: 0
 --- !u!114 &1085430310 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114166107463087338, guid: 7034de3b42a650b499ebd5c8ad2d2d93,
@@ -5383,6 +5386,7 @@ MonoBehaviour:
   boundingBoxes: []
   margin: 0
   cam: {fileID: 1212442766}
+  overrideForTraining: 0
 --- !u!1 &1214269466
 GameObject:
   m_ObjectHideFlags: 0
@@ -6082,6 +6086,7 @@ MonoBehaviour:
   boundingBoxes: []
   margin: 0
   cam: {fileID: 1513068925}
+  overrideForTraining: 0
 --- !u!1 &1561851610
 GameObject:
   m_ObjectHideFlags: 0
@@ -6844,6 +6849,7 @@ MonoBehaviour:
   boundingBoxes: []
   margin: 0
   cam: {fileID: 1727180094}
+  overrideForTraining: 0
 --- !u!20 &1727180094 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
@@ -7773,11 +7779,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:
-    maxStep: 0
+    maxStep: 500
     resetOnDone: 1
-    onDemandDecision: 1
+    onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
+  ccfov: {fileID: 1513068927}
   movementForwardSpeedMission: 50
+  VisionSize: 4
+  training: 1
 --- !u!114 &2017233234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7791,12 +7800,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    vectorObservationSize: 11
+    vectorObservationSize: 81
     numStackedVectorObservations: 1
     vectorActionSize: 09000000
     vectorActionDescriptions: []
     vectorActionSpaceType: 0
-  m_Model: {fileID: 11400000, guid: e144d1ed9bfe94ebbb7e041fc6989a65, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_UseHeuristic: 0
   m_BehaviorName: Drone
