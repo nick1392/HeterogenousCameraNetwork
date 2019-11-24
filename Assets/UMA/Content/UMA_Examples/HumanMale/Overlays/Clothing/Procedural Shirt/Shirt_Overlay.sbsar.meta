@@ -1,14 +1,27 @@
 fileFormatVersion: 2
 guid: 15f763500a82e48f89df97171417cf6d
 ScriptedImporter:
-  fileIDToRecycleName:
-    2100000: M_Shirt_Overlay
-    2800000: M_Shirt_Overlay - baseColor
-    2800002: M_Shirt_Overlay - normal
-    2800004: M_Shirt_Overlay - metallic
-    11400000: sbsar
-    11400002: graph0
+  internalIDToNameTable:
+  - first:
+      21: 2100000
+    second: M_Shirt_Overlay
+  - first:
+      28: 2800000
+    second: M_Shirt_Overlay - baseColor
+  - first:
+      28: 2800002
+    second: M_Shirt_Overlay - normal
+  - first:
+      28: 2800004
+    second: M_Shirt_Overlay - metallic
+  - first:
+      114: 11400000
+    second: sbsar
+  - first:
+      114: 11400002
+    second: graph0
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
