@@ -73,6 +73,7 @@
           </e>
         </e>
         <e p="Editor" t="Include">
+          <e p="BuildCommand.cs" t="Include" />
           <e p="CamerasManager_Editor.cs" t="Include" />
           <e p="GLDebug.cs" t="Include" />
           <e p="NewSurfaceShader 1.shader" t="Include" />
@@ -938,10 +939,7 @@
                 <e p="HUDFPS.cs" t="Include" />
                 <e p="Locomotion.cs" t="Include" />
                 <e p="LODDisplay.cs" t="Include" />
-                <e p="MenuScript.cs" t="Include" />
                 <e p="MouseOrbitImproved.cs" t="Include" />
-                <e p="PlayerController.cs" t="Include" />
-                <e p="PlayerSetup.cs" t="Include" />
                 <e p="SceneWalker.cs" t="Include" />
                 <e p="UMACharacterCustomization.cs" t="Include" />
                 <e p="UMACrowd.cs" t="Include" />
