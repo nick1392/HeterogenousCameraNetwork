@@ -217,11 +217,12 @@ public class DroneAgent : Agent
         float gcm = _gridController.GlobalCoverageMetric_Current();
         if (lastGCM != -1)
         {
-            SetReward(gcm - lastGCM - 0.1f);
+            var reward = ((gcm - lastGCM < 0) ? 1000f : 100f)*(gcm - lastGCM) - (0.1f / 3f);
+            SetReward(reward);
         }
 
 //        if (!training)
-            Debug.Log(GetReward());
+//            Debug.Log(GetReward());
 //        if (x == 0 && y == 0)
 //            AddReward(-0.01f);
 //        if (_gridController.timeConfidenceGrid.GetLength(0) <= x_coord + x ||
@@ -284,5 +285,7 @@ public class DroneAgent : Agent
         _gridController.Reset();
         decisions = requestedDecisions = 0;
         transform.position = new Vector3(Random.Range(-21f, 21f), 6.55f, Random.Range(-21f, 21f));
+        lastGCM = -1;
+        Debug.Log("#################### AGENT RESET ####################");
     }
 }
