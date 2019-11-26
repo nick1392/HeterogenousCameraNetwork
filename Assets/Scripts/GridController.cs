@@ -9,8 +9,8 @@ using Containers;
 
 public class GridController : MonoBehaviour
 {
-    public float currentTime; //current observation step id
-    public float t_max = 10; //time after which I have 0 confidence on the previous observation
+    public int currentTime; //current observation step id
+    public int t_max = 9; //time after which I have 0 confidence on the previous observation
 
     public bool logMetrics = false;
     public bool plotMaps = false;
@@ -371,12 +371,12 @@ public class GridController : MonoBehaviour
         Reset();
     }
 
-    private void Update()
-    {
-        currentTime += Time.deltaTime;
-        //Debug.Log("current" + currentTime );
-        //reset all newObs grids before new time step
-    }
+//    private void Update()
+//    {
+//        currentTime += Time.deltaTime;
+//        //Debug.Log("current" + currentTime );
+//        //reset all newObs grids before new time step
+//    }
 
     private void LateUpdate()
     {

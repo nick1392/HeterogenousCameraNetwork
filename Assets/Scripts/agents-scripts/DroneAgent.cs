@@ -207,34 +207,29 @@ public class DroneAgent : Agent
             drone.transform.position.y, _gridController.timeConfidenceGrid[x_coord + x, y_coord + y].GetPosition().z);
         //
 
-        if (training)
-        {
+//        if (training)
+//        {
             drone.transform.position = nextPosition;
             ccfov.Project();
-        }
+//        }
 
         mission = true;
         float gcm = _gridController.GlobalCoverageMetric_Current();
-        if (lastGCM != -1)
-        {
-            var reward = ((gcm - lastGCM < 0) ? 1000f : 100f)*(gcm - lastGCM) - (0.1f / 3f);
-            SetReward(reward);
-        }
-
-//        if (!training)
-//            Debug.Log(GetReward());
-//        if (x == 0 && y == 0)
-//            AddReward(-0.01f);
-//        if (_gridController.timeConfidenceGrid.GetLength(0) <= x_coord + x ||
-//            _gridController.timeConfidenceGrid.GetLength(1) <= y_coord + y ||
-//            x_coord + x < 0 || y_coord + y < 0)
+//        if (lastGCM != -1)
 //        {
-//            AddReward(-9999999);
-//            Done();
-//            return;
+            var reward = -1f + 2f * gcm;
+            SetReward(reward);
 //        }
+
+
+        if (!training)
+            Debug.Log(GetReward());
+
         lastGCM = gcm;
+        _gridController.currentTime++;
         decisions++;
+        if (decisions == _gridController.priorityGrid.GetLength(0)*_gridController.priorityGrid.GetLength(1))
+            Done();
     }
 
     public override float[] Heuristic()
@@ -260,28 +255,30 @@ public class DroneAgent : Agent
 
     public void Update()
     {
-        if (!training)
-            if (mission)
-            {
-                drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
-                    movementForwardSpeedMission * Time.deltaTime);
-                dist = Vector3.Distance(drone.transform.position, nextPosition);
-                if (Math.Abs(dist) < 0.01f)
-                {
-                    mission = false;
-                    RequestDecision();
-                    requestedDecisions++;
-                }
-            }
-            else
-            {
-                RequestDecision();
-                requestedDecisions++;
-            }
+//        if (!training)
+//            if (mission)
+//            {
+//                drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
+//                    movementForwardSpeedMission * Time.deltaTime);
+//                dist = Vector3.Distance(drone.transform.position, nextPosition);
+//                if (Math.Abs(dist) < 0.01f)
+//                {
+//                    mission = false;
+//                    RequestDecision();
+//                    requestedDecisions++;
+//                }
+//            }
+//            else
+//            {
+//                RequestDecision();
+//                requestedDecisions++;
+//            }
     }
 
     public override void AgentReset()
     {
+        if (!training)
+            return;
         _gridController.Reset();
         decisions = requestedDecisions = 0;
         transform.position = new Vector3(Random.Range(-21f, 21f), 6.55f, Random.Range(-21f, 21f));

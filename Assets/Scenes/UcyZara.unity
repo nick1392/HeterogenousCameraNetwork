@@ -6094,39 +6094,6 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 1638048346}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1513068920 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1491094393282654, guid: d216bb91edc64412987986d3a508227b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1671305803}
-  m_PrefabAsset: {fileID: 0}
---- !u!20 &1513068925 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1671305803}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1513068927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1513068920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a0c4ff5cdaec4c4eac874a340dd11f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxDistance: 10
-  frameRate: 15
-  showDebugRays: 0
-  personHit: []
-  personHitSizeChecked: []
-  boundingBoxes: []
-  margin: 0
-  cam: {fileID: 1513068925}
-  overrideForTraining: 0
 --- !u!1 &1561851610
 GameObject:
   m_ObjectHideFlags: 0
@@ -6538,18 +6505,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1542548312462286, guid: d216bb91edc64412987986d3a508227b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
-        type: 3}
-      propertyPath: m_TargetDisplay
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: m_Name
+      value: drone
       objectReference: {fileID: 0}
     - target: {fileID: 4977196860686940, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6583,35 +6540,20 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 14
       objectReference: {fileID: 0}
-    - target: {fileID: 81466974663171950, guid: d216bb91edc64412987986d3a508227b,
-        type: 3}
-      propertyPath: m_Enabled
+    - target: {fileID: 4977196860686940, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4740688250515864, guid: d216bb91edc64412987986d3a508227b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4740688250515864, guid: d216bb91edc64412987986d3a508227b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4740688250515864, guid: d216bb91edc64412987986d3a508227b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
+    - target: {fileID: 4977196860686940, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
-    - target: {fileID: 4740688250515864, guid: d216bb91edc64412987986d3a508227b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.94
-      objectReference: {fileID: 0}
-    - target: {fileID: 114265866156721524, guid: d216bb91edc64412987986d3a508227b,
-        type: 3}
-      propertyPath: m_Enabled
+    - target: {fileID: 4977196860686940, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 54340177279288068, guid: d216bb91edc64412987986d3a508227b,
-        type: 3}
-      propertyPath: m_UseGravity
+    - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: agentParameters.maxStep
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6852,7 +6794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTime: 0
-  t_max: 0.5
+  t_max: 10
   logMetrics: 0
   plotMaps: 1
   cellWidth: 5
@@ -7800,68 +7742,6 @@ MonoBehaviour:
   - target: {fileID: 245721792}
     probability: 0.33333334
     destroyAtDestination: 1
---- !u!1 &2017233232 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1542548312462286, guid: d216bb91edc64412987986d3a508227b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1671305803}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2017233233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2017233232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce9d6e00d99bb41e18bffd27fa55ee62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agentParameters:
-    maxStep: 30
-    resetOnDone: 1
-    onDemandDecision: 0
-    numberOfActionsBetweenDecisions: 1
-  ccfov: {fileID: 1513068927}
-  movementForwardSpeedMission: 50
-  VisionSize: 4
-  training: 1
---- !u!114 &2017233234
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2017233232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BrainParameters:
-    vectorObservationSize: 81
-    numStackedVectorObservations: 1
-    vectorActionSize: 09000000
-    vectorActionDescriptions: []
-    vectorActionSpaceType: 0
-  m_Model: {fileID: 0}
-  m_InferenceDevice: 1
-  m_UseHeuristic: 0
-  m_BehaviorName: Drone
---- !u!114 &2017233240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2017233232}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5db3f4f488ae327408d101507c020357, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  searchFrequency: 4
 --- !u!1 &2017276972 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1000014248265156, guid: 2965b439004fa8c48a8dd6736c4eab68,
