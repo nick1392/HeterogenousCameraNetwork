@@ -163,7 +163,7 @@ public class DroneAgent : Agent
 ////        AddReward(-0.01f);
         var action = Mathf.FloorToInt(vectorAction[0]);
         int stepsMax = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
-
+        
         int x = 0;
         int y = 0;
 

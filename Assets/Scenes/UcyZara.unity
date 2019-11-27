@@ -6560,6 +6560,10 @@ PrefabInstance:
       propertyPath: training
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: movementForwardSpeedMission
+      value: 72
+      objectReference: {fileID: 0}
     - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_Model
       value: 
@@ -6802,7 +6806,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTime: 0
-  t_max: 10
+  t_max: 50
   logMetrics: 0
   plotMaps: 1
   cellWidth: 5
