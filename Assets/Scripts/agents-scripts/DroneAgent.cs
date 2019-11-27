@@ -162,6 +162,7 @@ public class DroneAgent : Agent
 //        lastTime = Time.time;
 ////        AddReward(-0.01f);
         var action = Mathf.FloorToInt(vectorAction[0]);
+        int stepsMax = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
 
         int x = 0;
         int y = 0;
@@ -217,8 +218,8 @@ public class DroneAgent : Agent
         float gcm = _gridController.GlobalCoverageMetric_Current();
 //        if (lastGCM != -1)
 //        {
-            var reward = -1f + 2f * gcm;
-            SetReward(reward);
+            float reward = -1f + 2f * gcm;
+            SetReward(reward/((float)stepsMax));
 //        }
 
 
@@ -228,7 +229,7 @@ public class DroneAgent : Agent
         lastGCM = gcm;
         _gridController.currentTime++;
         decisions++;
-        if (decisions == _gridController.priorityGrid.GetLength(0)*_gridController.priorityGrid.GetLength(1))
+        if (decisions >= stepsMax)
             Done();
     }
 

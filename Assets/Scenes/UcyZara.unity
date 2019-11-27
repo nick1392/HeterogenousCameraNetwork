@@ -6556,6 +6556,14 @@ PrefabInstance:
       propertyPath: agentParameters.maxStep
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: training
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d216bb91edc64412987986d3a508227b, type: 3}
 --- !u!1 &1680745006 stripped
@@ -7007,16 +7015,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: drone (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
-        type: 3}
-      propertyPath: m_TargetDisplay
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4977196860686940, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.7
@@ -7048,6 +7046,16 @@ PrefabInstance:
     - target: {fileID: 4977196860686940, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_RootOrder
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_TargetDisplay
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 81466974663171950, guid: d216bb91edc64412987986d3a508227b,
         type: 3}

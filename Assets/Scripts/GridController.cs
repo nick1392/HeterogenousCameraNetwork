@@ -389,6 +389,7 @@ public class GridController : MonoBehaviour
         {
             for (int j = 0; j < numberOfCellsDepth; j++)
             {
+                spatialConfidenceGrid[i, j].SetValue(1);
                 if (overralConfidenceGridTime[i, j].value != 0)
                 {
                     //Debug.Log("newobs = " + overralConfidenceGridNewObs[i, j].value);
@@ -404,7 +405,7 @@ public class GridController : MonoBehaviour
 
                     overralConfidenceGrid[i, j].SetValue(overralConfidenceGridNewObs[i, j].value);
                     observationGrid[i, j].SetValue(observationGridNewObs[i, j].value);
-                    spatialConfidenceGrid[i, j].SetValue(spatialConfidenceGridNewObs[i, j].value);
+                    //spatialConfidenceGrid[i, j].SetValue(spatialConfidenceGridNewObs[i, j].value);
 
                     //Debug.Log("newobs");
                 }
