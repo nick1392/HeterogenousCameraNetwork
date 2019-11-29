@@ -379,6 +379,8 @@
           <e p="agents-scripts" t="Include">
             <e p="CameraAcademy.cs" t="Include" />
             <e p="DroneAgent.cs" t="Include" />
+            <e p="GridSensor.cs" t="Include" />
+            <e p="GridSensorComponent.cs" t="Include" />
           </e>
           <e p="CameraControllerFOV.cs" t="Include" />
           <e p="DroneCameraController.cs" t="Include" />

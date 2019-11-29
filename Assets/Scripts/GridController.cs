@@ -15,6 +15,7 @@ public class GridController : MonoBehaviour
     public bool logMetrics = false;
     public bool plotMaps = false;
 
+    public RenderTexture rt;
     public Cell[,] observationGrid,
         timeConfidenceGrid,
         spatialConfidenceGrid,
@@ -27,7 +28,7 @@ public class GridController : MonoBehaviour
         observationGridNewObs,
         priorityGrid, priorityGrid_prec;
 
-    Texture2D observationTexture,
+    public Texture2D observationTexture,
         timeConfidenceTexture,
         spatialConfidenceTexture,
         overralConfidenceTexture,
@@ -337,7 +338,7 @@ public class GridController : MonoBehaviour
         
     }
 
-    private void Start()
+    private void Awake()
     {
         InitializeGrid(ref observationGrid, plotMaps, new Vector2(-1f, 0f),
             ref observationTexture, "Observation");
@@ -452,6 +453,7 @@ public class GridController : MonoBehaviour
             overralConfidenceTextureTime.Apply();
             priorityTexture.Apply();
             lastObsTexture.Apply();
+            Graphics.Blit(spatialConfidenceTexture, rt);
         }
 
         GlobalCoverageMetric();

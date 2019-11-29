@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using Geometry;
 using MLAgents;
 using UnityEngine;
@@ -96,28 +97,17 @@ public class DroneAgent : Agent
             for (int j = y_coord - obsSize; j <= y_coord + obsSize; j++)
                 list.Add(GetCellValue(grid, i, j));
         }
-
         return list;
     }
 
     public override void CollectObservations()
     {
-//        Debug.Log("looo");
+        ApplyMask();
+    }
+    void ApplyMask()
+    {
         (int x_coord, int y_coord) = UpdateCoords();
-//        //P_t
-//        AddVectorObs(GetCells(_gridController.priorityGrid, x_coord, y_coord));
-//        //F_t
-//        AddVectorObs(GetCells(_gridController.overralConfidenceGrid, x_coord, y_coord));
-        List<float> ft = GetCells(_gridController.overralConfidenceGrid, x_coord, y_coord);
-        List<float> pt_prec = GetCells(_gridController.priorityGrid_prec, x_coord, y_coord);
-        for (int i = 0; i < ft.Count; i++)
-        {
-            AddVectorObs(ft[i] - pt_prec[i]);
-        }
-
-//        AddVectorObs(x_coord);
-//        AddVectorObs(y_coord);
-        List<int> actionMask = new List<int>();
+        var actionMask = new List<int>();
         if (x_coord + 1 >= _gridController.priorityGrid.GetLength(0))
             actionMask.AddRange(new[] {k_Right, k_TopRight, k_BottomRight});
         if (x_coord - 1 < 0)
@@ -218,8 +208,14 @@ public class DroneAgent : Agent
         float gcm = _gridController.GlobalCoverageMetric_Current();
 //        if (lastGCM != -1)
 //        {
-            float reward = -1f + 2f * gcm;
-            SetReward(reward/((float)stepsMax));
+//            float reward = -1f + 2f * gcm;
+//            SetReward(reward/((float)stepsMax));
+        AddReward(-0.01f);
+        if (Math.Abs(gcm - 1) < 0.01f)
+        {
+            AddReward(1f);
+            Done();
+        }
 //        }
 
 
@@ -229,8 +225,8 @@ public class DroneAgent : Agent
         lastGCM = gcm;
         _gridController.currentTime++;
         decisions++;
-        if (decisions >= stepsMax)
-            Done();
+//        if (decisions >= stepsMax)
+//            Done();
     }
 
     public override float[] Heuristic()
@@ -254,36 +250,38 @@ public class DroneAgent : Agent
         return new float[] {k_NoAction};
     }
 
-    public void Update()
+/*    public void Update()
     {
-//        if (!training)
-//            if (mission)
-//            {
-//                drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
-//                    movementForwardSpeedMission * Time.deltaTime);
-//                dist = Vector3.Distance(drone.transform.position, nextPosition);
-//                if (Math.Abs(dist) < 0.01f)
-//                {
-//                    mission = false;
-//                    RequestDecision();
-//                    requestedDecisions++;
-//                }
-//            }
-//            else
-//            {
-//                RequestDecision();
-//                requestedDecisions++;
-//            }
-    }
+        if (!training)
+            if (mission)
+            {
+                drone.transform.position = Vector3.MoveTowards(drone.transform.position, nextPosition,
+                    movementForwardSpeedMission * Time.deltaTime);
+                dist = Vector3.Distance(drone.transform.position, nextPosition);
+                if (Math.Abs(dist) < 0.01f)
+                {
+                    mission = false;
+                    RequestDecision();
+                    requestedDecisions++;
+                }
+            }
+            else
+            {
+                RequestDecision();
+                requestedDecisions++;
+            }
+    }*/
 
     public override void AgentReset()
     {
         if (!training)
             return;
         _gridController.Reset();
+        ResetReward();
         decisions = requestedDecisions = 0;
         transform.position = new Vector3(Random.Range(-21f, 21f), 6.55f, Random.Range(-21f, 21f));
         lastGCM = -1;
         Debug.Log("#################### AGENT RESET ####################");
+        base.AgentReset();
     }
 }
