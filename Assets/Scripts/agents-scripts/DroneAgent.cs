@@ -281,7 +281,7 @@ public class DroneAgent : Agent
         decisions = requestedDecisions = 0;
         transform.position = new Vector3(Random.Range(-21f, 21f), 6.55f, Random.Range(-21f, 21f));
         lastGCM = -1;
-        Debug.Log("#################### AGENT RESET ####################");
+//        Debug.Log("#################### AGENT RESET ####################");
         base.AgentReset();
     }
 }

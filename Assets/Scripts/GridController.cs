@@ -453,7 +453,7 @@ public class GridController : MonoBehaviour
             overralConfidenceTextureTime.Apply();
             priorityTexture.Apply();
             lastObsTexture.Apply();
-            Graphics.Blit(spatialConfidenceTexture, rt);
+            Graphics.Blit(timeConfidenceTexture, rt);
         }
 
         GlobalCoverageMetric();
