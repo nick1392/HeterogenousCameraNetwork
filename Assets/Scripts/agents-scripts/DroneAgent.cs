@@ -17,6 +17,7 @@ public class DroneAgent : Agent
     // drone variables
     private float movementForwardSpeed = 5;
     private float movementRightSpeed = 5;
+    [SerializeField]private bool logReward;
 
     // POI variables
 
@@ -47,7 +48,11 @@ public class DroneAgent : Agent
     private Rigidbody _rb;
     private GridController _gridController;
     public int VisionSize = 4;
-
+    public RenderTexture rt;
+    private Academy m_Academy;
+    public float timeBetweenDecisionsAtInference;
+    private float m_TimeSinceDecision;
+    
     private void Awake()
     {
         _gridController = GameObject.Find("Map").GetComponent<GridController>();
@@ -58,6 +63,7 @@ public class DroneAgent : Agent
     {
         drone = GetComponent<Rigidbody>();
         windowSize1 = 10;
+        m_Academy = FindObjectOfType<Academy>();
 //        RequestDecision();
     }
 
@@ -97,16 +103,28 @@ public class DroneAgent : Agent
             for (int j = y_coord - obsSize; j <= y_coord + obsSize; j++)
                 list.Add(GetCellValue(grid, i, j));
         }
+
         return list;
     }
 
     public override void CollectObservations()
     {
-        ApplyMask();
-    }
-    void ApplyMask()
-    {
         (int x_coord, int y_coord) = UpdateCoords();
+        _gridController.maskedx = x_coord;
+        _gridController.maskedy = y_coord;
+        for (int i = x_coord - 1; i <= x_coord + 1; i++)
+        for (int j = y_coord - 1; j <= y_coord + 1; j++)
+            if (i >= 0 && j >= 0 && i < _gridController.overralConfidenceGrid.GetLength(0) &&
+                j < _gridController.overralConfidenceGrid.GetLength(0))
+                _gridController.overralConfidenceGrid[i, j].UpdateColor();
+        _gridController.overralConfidenceTexture.SetPixel(x_coord, y_coord, Color.yellow);
+        _gridController.overralConfidenceTexture.Apply();
+        Graphics.Blit(_gridController.overralConfidenceTexture, rt);
+        SetActionMask(GetActionMask(x_coord, y_coord));
+    }
+
+    IEnumerable<int> GetActionMask(int x_coord, int y_coord)
+    {
         var actionMask = new List<int>();
         if (x_coord + 1 >= _gridController.priorityGrid.GetLength(0))
             actionMask.AddRange(new[] {k_Right, k_TopRight, k_BottomRight});
@@ -116,7 +134,7 @@ public class DroneAgent : Agent
             actionMask.AddRange(new[] {k_Up, k_TopLeft, k_TopRight});
         if (y_coord - 1 < 0)
             actionMask.AddRange(new[] {k_Down, k_BottomLeft, k_BottomRight});
-        SetActionMask(actionMask.Distinct());
+        return actionMask.Distinct();
     }
 
     private const int k_NoAction = 0; // do nothing!
@@ -141,19 +159,21 @@ public class DroneAgent : Agent
         if (!_gridController)
             return;
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_gridController.cellWidth*VisionSize*2,0.1f, _gridController.cellDepth*VisionSize*2));
+        Gizmos.DrawWireCube(transform.position,
+            new Vector3(_gridController.cellWidth * VisionSize * 2, 0.1f, _gridController.cellDepth * VisionSize * 2));
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_gridController.cellWidth*3,0.1f, _gridController.cellDepth*3));
+        Gizmos.DrawWireCube(transform.position,
+            new Vector3(_gridController.cellWidth * 3, 0.1f, _gridController.cellDepth * 3));
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
 //        Debug.Log("Act " + (Time.time-lastTime));
-//        lastTime = Time.time;
-////        AddReward(-0.01f);
+        //    lastTime = Time.time;
+
         var action = Mathf.FloorToInt(vectorAction[0]);
         int stepsMax = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
-        
+
         int x = 0;
         int y = 0;
 
@@ -200,26 +220,30 @@ public class DroneAgent : Agent
 
 //        if (training)
 //        {
-            drone.transform.position = nextPosition;
-            ccfov.Project();
+        drone.transform.position = nextPosition;
+        if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value > 0)
+            AddReward(-0.01f);
+        else if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value < 0.1)
+            AddReward(0.01f);
+        ccfov.Project();
 //        }
 
         mission = true;
+        
         float gcm = _gridController.GlobalCoverageMetric_Current();
-//        if (lastGCM != -1)
-//        {
-//            float reward = -1f + 2f * gcm;
-//            SetReward(reward/((float)stepsMax));
-        AddReward(-0.01f);
+//       if (lastGCM != -1)
+//       {
+//        //    float reward = -1f + 2f * gcm;
+//           AddReward(gcm - lastGCM);
         if (Math.Abs(gcm - 1) < 0.01f)
         {
             AddReward(1f);
             Done();
         }
-//        }
+//       }
 
 
-        if (!training)
+        if (logReward)
             Debug.Log(GetReward());
 
         lastGCM = gcm;
@@ -231,23 +255,27 @@ public class DroneAgent : Agent
 
     public override float[] Heuristic()
     {
+        float[] ret = {k_NoAction};
         if (Input.GetKey(KeyCode.D))
-            return new float[] {k_Right};
+            ret = new float[] {k_Right};
         if (Input.GetKey(KeyCode.W))
-            return new float[] {k_Up};
+            ret = new float[] {k_Up};
         if (Input.GetKey(KeyCode.A))
-            return new float[] {k_Left};
+            ret = new float[] {k_Left};
         if (Input.GetKey(KeyCode.X))
-            return new float[] {k_Down};
+            ret = new float[] {k_Down};
         if (Input.GetKey(KeyCode.E))
-            return new float[] {k_TopRight};
+            ret = new float[] {k_TopRight};
         if (Input.GetKey(KeyCode.Q))
-            return new float[] {k_TopLeft};
+            ret = new float[] {k_TopLeft};
         if (Input.GetKey(KeyCode.Z))
-            return new float[] {k_BottomLeft};
+            ret = new float[] {k_BottomLeft};
         if (Input.GetKey(KeyCode.C))
-            return new float[] {k_BottomRight};
-        return new float[] {k_NoAction};
+            ret = new float[] {k_BottomRight};
+        (int x, int y) = UpdateCoords();
+        if (GetActionMask(x, y).Contains((int) ret[0]))
+            ret = new float[] {k_NoAction};
+        return ret;
     }
 
 /*    public void Update()
@@ -271,6 +299,30 @@ public class DroneAgent : Agent
                 requestedDecisions++;
             }
     }*/
+    public void FixedUpdate()
+    {
+        WaitTimeInference();
+    }
+
+    private void WaitTimeInference()
+    {
+        if (!m_Academy.GetIsInference())
+        {
+            RequestDecision();
+        }
+        else
+        {
+            if (m_TimeSinceDecision >= timeBetweenDecisionsAtInference)
+            {
+                m_TimeSinceDecision = 0f;
+                RequestDecision();
+            }
+            else
+            {
+                m_TimeSinceDecision += Time.fixedDeltaTime;
+            }
+        }
+    }
 
     public override void AgentReset()
     {
@@ -281,7 +333,8 @@ public class DroneAgent : Agent
         decisions = requestedDecisions = 0;
         transform.position = new Vector3(Random.Range(-21f, 21f), 6.55f, Random.Range(-21f, 21f));
         lastGCM = -1;
-//        Debug.Log("#################### AGENT RESET ####################");
+        if (logReward)
+        Debug.Log("#################### AGENT RESET ####################");
         base.AgentReset();
     }
 }

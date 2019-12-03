@@ -14,8 +14,7 @@ public class GridController : MonoBehaviour
 
     public bool logMetrics = false;
     public bool plotMaps = false;
-
-    public RenderTexture rt;
+    
     public Cell[,] observationGrid,
         timeConfidenceGrid,
         spatialConfidenceGrid,
@@ -379,6 +378,7 @@ public class GridController : MonoBehaviour
 //        //reset all newObs grids before new time step
 //    }
 
+    public int maskedx = -1, maskedy = -1;
     private void LateUpdate()
     {
         UpdateTimeConfidenceGrid();
@@ -427,7 +427,8 @@ public class GridController : MonoBehaviour
                     observationGrid[i, j].UpdateColor();
                     timeConfidenceGrid[i, j].UpdateColor();
                     spatialConfidenceGrid[i, j].UpdateColor();
-                    overralConfidenceGrid[i, j].UpdateColor();
+                    if (!(i == maskedx && j == maskedy))
+                        overralConfidenceGrid[i, j].UpdateColor();
                     overralConfidenceGridTime[i, j].UpdateColor();
                     overralConfidenceGridNewObs[i, j].UpdateColor();
                     spatialConfidenceGridNewObs[i, j].UpdateColor();
@@ -453,7 +454,6 @@ public class GridController : MonoBehaviour
             overralConfidenceTextureTime.Apply();
             priorityTexture.Apply();
             lastObsTexture.Apply();
-            Graphics.Blit(timeConfidenceTexture, rt);
         }
 
         GlobalCoverageMetric();

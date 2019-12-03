@@ -82,7 +82,6 @@ namespace Geometry
         public void UpdateColor()
         {
             _texture2D.SetPixel(i, j, new Color(1 - value, value, 0));
-
             //if (value != 0) Debug.Log(value);
         }
 
