@@ -237,7 +237,7 @@ public class DroneAgent : Agent
 //           AddReward(gcm - lastGCM);
         if (Math.Abs(gcm - 1) < 0.01f)
         {
-            AddReward(1f);
+            AddReward(0.84f);
             Done();
         }
 //       }
