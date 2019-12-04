@@ -6554,7 +6554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: agentParameters.maxStep
-      value: 100
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: training

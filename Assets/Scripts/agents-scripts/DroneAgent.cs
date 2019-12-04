@@ -221,10 +221,15 @@ public class DroneAgent : Agent
 //        if (training)
 //        {
         drone.transform.position = nextPosition;
+        float max_steps = 24f;
+        float grid_size = 16f;
+        float gen_reward = 1f / (max_steps + grid_size);
         if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value > 0)
-            AddReward(-0.01f);
+            AddReward(-gen_reward);
         else if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value < 0.1)
-            AddReward(0.01f);
+            AddReward(gen_reward);
+        if (decisions > grid_size)
+            AddReward(-gen_reward);
         ccfov.Project();
 //        }
 
@@ -237,7 +242,7 @@ public class DroneAgent : Agent
 //           AddReward(gcm - lastGCM);
         if (Math.Abs(gcm - 1) < 0.01f)
         {
-            AddReward(0.84f);
+            AddReward(1-gen_reward*grid_size);
             Done();
         }
 //       }
