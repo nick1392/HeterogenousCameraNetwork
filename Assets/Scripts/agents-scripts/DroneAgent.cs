@@ -166,13 +166,12 @@ public class DroneAgent : Agent
             new Vector3(_gridController.cellWidth * 3, 0.1f, _gridController.cellDepth * 3));
     }
 
-    public override void AgentAction(float[] vectorAction, string textAction)
+    public override void AgentAction(float[] vectorAction)
     {
 //        Debug.Log("Act " + (Time.time-lastTime));
         //    lastTime = Time.time;
 
         var action = Mathf.FloorToInt(vectorAction[0]);
-        int stepsMax = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
 
         int x = 0;
         int y = 0;
@@ -222,7 +221,7 @@ public class DroneAgent : Agent
 //        {
         drone.transform.position = nextPosition;
         float max_steps = 24f;
-        float grid_size = 16f;
+        float grid_size = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
         float gen_reward = 1f / (max_steps + grid_size);
         if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value > 0)
             AddReward(-gen_reward);

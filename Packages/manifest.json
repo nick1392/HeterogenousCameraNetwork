@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.barracuda": "0.3.2-preview",
     "com.unity.package-manager-ui": "2.1.2",
     "com.unity.quicksearch": "1.4.1",
     "com.unity.timeline": "1.0.0",

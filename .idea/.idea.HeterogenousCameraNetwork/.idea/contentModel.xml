@@ -114,6 +114,12 @@
               <e p="MultinomialTest.cs" t="Include" />
               <e p="RandomNormalTest.cs" t="Include" />
               <e p="RayPerceptionTests.cs" t="Include" />
+              <e p="Sensor" t="Include">
+                <e p="RayPerceptionSensorTests.cs" t="Include" />
+                <e p="StackingSensorTests.cs" t="Include" />
+                <e p="VectorSensorTests.cs" t="Include" />
+                <e p="WriterAdapterTests.cs" t="Include" />
+              </e>
               <e p="StandaloneBuildTest.cs" t="Include" />
               <e p="TensorUtilsTest.cs" t="Include" />
               <e p="TimerTest.cs" t="Include" />
@@ -245,41 +251,6 @@
             </e>
           </e>
           <e p="Plugins" t="Include">
-            <e p="Barracuda.Core" t="Include">
-              <e p="Barracuda" t="Include">
-                <e p="Plugins" t="Include">
-                  <e p="Editor" t="Include">
-                    <e p="BarracudaEditor" t="Include">
-                      <e p="Barracuda-editor.asmdef" t="Include" />
-                      <e p="NNModelImporter.cs" t="Include" />
-                    </e>
-                  </e>
-                  <e p="iOS" t="Include">
-                    <e p="iOSBLAS.asmdef" t="Include" />
-                    <e p="iOSBLAS.cs" t="Include" />
-                  </e>
-                  <e p="OSX" t="Include">
-                    <e p="MacBLAS.asmdef" t="Include" />
-                    <e p="MacBLAS.cs" t="Include" />
-                  </e>
-                </e>
-                <e p="Resources" t="Include">
-                  <e p="Activation.compute" t="Include" />
-                  <e p="BarracudaReferenceImpl.compute" t="Include" />
-                  <e p="Broadcast.compute" t="Include" />
-                  <e p="Conv.compute" t="Include" />
-                  <e p="ConvOld.compute" t="Include" />
-                  <e p="Dense.compute" t="Include" />
-                  <e p="DenseFP16.compute" t="Include" />
-                  <e p="Experimental.compute" t="Include" />
-                  <e p="FastNV.compute" t="Include" />
-                  <e p="Generic.compute" t="Include" />
-                  <e p="Random.cginc" t="Include" />
-                  <e p="Tensor.cginc" t="Include" />
-                  <e p="TexConv.compute" t="Include" />
-                </e>
-              </e>
-            </e>
             <e p="ProtoBuffer" t="Include">
               <e p="link.xml" t="Include" />
             </e>
@@ -295,16 +266,15 @@
               <e p="CommunicatorObjects" t="Include">
                 <e p="AgentAction.cs" t="Include" />
                 <e p="AgentInfo.cs" t="Include" />
+                <e p="AgentInfoActionPair.cs" t="Include" />
                 <e p="BrainParameters.cs" t="Include" />
                 <e p="Command.cs" t="Include" />
-                <e p="CompressedObservation.cs" t="Include" />
-                <e p="CustomAction.cs" t="Include" />
-                <e p="CustomObservation.cs" t="Include" />
                 <e p="CustomResetParameters.cs" t="Include" />
                 <e p="DemonstrationMeta.cs" t="Include" />
                 <e p="EngineConfiguration.cs" t="Include" />
                 <e p="EnvironmentParameters.cs" t="Include" />
                 <e p="Header.cs" t="Include" />
+                <e p="Observation.cs" t="Include" />
                 <e p="SpaceType.cs" t="Include" />
                 <e p="UnityInput.cs" t="Include" />
                 <e p="UnityMessage.cs" t="Include" />
@@ -347,12 +317,19 @@
             <e p="Sensor" t="Include">
               <e p="CameraSensor.cs" t="Include" />
               <e p="CameraSensorComponent.cs" t="Include" />
-              <e p="CompressedObservation.cs" t="Include" />
               <e p="ISensor.cs" t="Include" />
+              <e p="Observation.cs" t="Include" />
+              <e p="RayPerceptionSensor.cs" t="Include" />
+              <e p="RayPerceptionSensorComponent2D.cs" t="Include" />
+              <e p="RayPerceptionSensorComponent3D.cs" t="Include" />
+              <e p="RayPerceptionSensorComponentBase.cs" t="Include" />
               <e p="RenderTextureSensor.cs" t="Include" />
               <e p="RenderTextureSensorComponent.cs" t="Include" />
               <e p="SensorBase.cs" t="Include" />
               <e p="SensorComponent.cs" t="Include" />
+              <e p="StackingSensor.cs" t="Include" />
+              <e p="VectorSensor.cs" t="Include" />
+              <e p="WriteAdapter.cs" t="Include" />
             </e>
             <e p="Startup.cs" t="Include" />
             <e p="Timer.cs" t="Include" />
@@ -1023,10 +1000,7 @@
           <e p="Whats New in UMA.txt" t="Include" />
         </e>
       </e>
-      <e p="Barracuda-editor.csproj" t="IncludeRecursive" />
       <e p="HeterogenousCameraNetwork.sln" t="IncludeFlat" />
-      <e p="iOSBLAS.csproj" t="IncludeRecursive" />
-      <e p="MacBLAS.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="Temp/bin" t="ExcludeRecursive" />
