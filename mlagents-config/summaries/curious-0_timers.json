@@ -1,0 +1,133 @@
+{
+  "name": "root",
+  "gauges": [
+    {
+      "name": "Drone.mean_reward",
+      "value": 0.2969135846712707,
+      "min": 0.2500000037252903,
+      "max": 0.35750000532716514,
+      "count": 890
+    }
+  ],
+  "total": 74574.810522167,
+  "count": 1,
+  "self": 150.385353757767,
+  "children": [
+    {
+      "name": "TrainerController.advance",
+      "total": 74424.42516840923,
+      "count": 177202,
+      "self": 3476.64375376892,
+      "children": [
+        {
+          "name": "env_step",
+          "total": 5419.944673131653,
+          "count": 177202,
+          "self": 1451.319087124033,
+          "children": [
+            {
+              "name": "SubprocessEnvManager._take_step",
+              "total": 3948.2369430403323,
+              "count": 1780145,
+              "self": 3948.2369430403323
+            },
+            {
+              "name": "workers",
+              "total": 20.388642967287524,
+              "count": 177202,
+              "self": 0.0,
+              "children": [
+                {
+                  "name": "worker_root",
+                  "total": 1193047.3030545597,
+                  "count": 1780137,
+                  "is_parallel": true,
+                  "self": 1160028.235582476,
+                  "children": [
+                    {
+                      "name": "BrainInfo.process_pixels",
+                      "total": 0.4591419690041221,
+                      "count": 16,
+                      "is_parallel": true,
+                      "self": 0.02734448600494943,
+                      "children": [
+                        {
+                          "name": "image_decompress",
+                          "total": 0.43179748299917264,
+                          "count": 16,
+                          "is_parallel": true,
+                          "self": 0.43179748299917264
+                        }
+                      ]
+                    },
+                    {
+                      "name": "UnityEnvironment.step",
+                      "total": 33018.608330114606,
+                      "count": 1780137,
+                      "is_parallel": true,
+                      "self": 531.8066684104924,
+                      "children": [
+                        {
+                          "name": "UnityEnvironment._generate_step_input",
+                          "total": 128.80933525743603,
+                          "count": 1780137,
+                          "is_parallel": true,
+                          "self": 128.80933525743603
+                        },
+                        {
+                          "name": "communicator.exchange",
+                          "total": 31454.266226732292,
+                          "count": 1780137,
+                          "is_parallel": true,
+                          "self": 31454.266226732292
+                        },
+                        {
+                          "name": "BrainInfo.process_pixels",
+                          "total": 903.7260997143858,
+                          "count": 1780137,
+                          "is_parallel": true,
+                          "self": 258.185390844892,
+                          "children": [
+                            {
+                              "name": "image_decompress",
+                              "total": 645.5407088694938,
+                              "count": 1780137,
+                              "is_parallel": true,
+                              "self": 645.5407088694938
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "update_policy",
+          "total": 65527.83674150866,
+          "count": 177136,
+          "self": 3.5171167074076948,
+          "children": [
+            {
+              "name": "SACTrainer.update_policy",
+              "total": 65524.319624801254,
+              "count": 177136,
+              "self": 40876.87441948769,
+              "children": [
+                {
+                  "name": "SACPolicy.update",
+                  "total": 24647.44520531356,
+                  "count": 177136,
+                  "self": 24647.44520531356
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
