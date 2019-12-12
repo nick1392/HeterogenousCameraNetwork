@@ -3,7 +3,7 @@ import gym
 from baselines import deepq
 from baselines import logger
 
-from gym_unity.envs.unity_env import UnityEnv
+from gym_unity.envs import UnityEnv
 
 def main():
     env = UnityEnv("/Users/alberto/Downloads/build.app", 0, use_visual=True, uint8_visual=True)
@@ -16,7 +16,7 @@ def main():
         buffer_size=50000,
         exploration_fraction=0.05,
         exploration_final_eps=0.1,
-        print_freq=20,
+        print_freq=1000,
         train_freq=5,
         learning_starts=20000,
         target_network_update_freq=50,

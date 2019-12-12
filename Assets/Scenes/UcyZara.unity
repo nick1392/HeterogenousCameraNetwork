@@ -2745,7 +2745,6 @@ GameObject:
   - component: {fileID: 668102474}
   - component: {fileID: 668102473}
   - component: {fileID: 668102472}
-  - component: {fileID: 668102471}
   m_Layer: 0
   m_Name: Minimap Camera
   m_TagString: Untagged
@@ -2753,14 +2752,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &668102471
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 668102470}
-  m_Enabled: 1
 --- !u!124 &668102472
 Behaviour:
   m_ObjectHideFlags: 0
@@ -5532,8 +5523,8 @@ MonoBehaviour:
   m_TrainingConfiguration:
     width: 80
     height: 80
-    qualityLevel: 1
-    timeScale: 100
+    qualityLevel: 0
+    timeScale: 1
     targetFrameRate: -1
   m_InferenceConfiguration:
     width: 1280
@@ -6554,7 +6545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: agentParameters.maxStep
-      value: 24
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: training
@@ -6574,7 +6565,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: logReward
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_Model
@@ -6611,8 +6602,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderTexture: {fileID: 8600000, guid: 0676d49256ce947ecbe59aee2bdb7ab8, type: 2}
   sensorName: RenderTextureSensor
-  width: 84
-  height: 84
   grayscale: 0
 --- !u!1 &1680745006 stripped
 GameObject:
@@ -6865,8 +6854,8 @@ MonoBehaviour:
   observationTextureNewObs: {fileID: 0}
   priorityTexture: {fileID: 0}
   priorityTexture_prec: {fileID: 0}
-  cellWidth: 15
-  cellDepth: 15
+  cellWidth: 30
+  cellDepth: 30
   ped_max: 2
   alfa: 0
   spatialThreshold: 0.2

@@ -1,0 +1,102 @@
+{
+  "name": "root",
+  "total": 63.69874130699827,
+  "count": 1,
+  "self": 4.650962326006265,
+  "children": [
+    {
+      "name": "TrainerController.advance",
+      "total": 59.04777898099201,
+      "count": 234,
+      "self": 0.08256957094999962,
+      "children": [
+        {
+          "name": "env_step",
+          "total": 58.96520941004201,
+          "count": 234,
+          "self": 58.556377640012215,
+          "children": [
+            {
+              "name": "SubprocessEnvManager._take_step",
+              "total": 0.40540507801779313,
+              "count": 234,
+              "self": 0.40540507801779313
+            },
+            {
+              "name": "workers",
+              "total": 0.0034266920119989663,
+              "count": 233,
+              "self": 0.0,
+              "children": [
+                {
+                  "name": "worker_root",
+                  "total": 59.00915726099993,
+                  "count": 233,
+                  "is_parallel": true,
+                  "self": 5.324669083995104,
+                  "children": [
+                    {
+                      "name": "BrainInfo.process_pixels",
+                      "total": 0.021050551000371343,
+                      "count": 1,
+                      "is_parallel": true,
+                      "self": 0.0005117430009704549,
+                      "children": [
+                        {
+                          "name": "image_decompress",
+                          "total": 0.020538807999400888,
+                          "count": 1,
+                          "is_parallel": true,
+                          "self": 0.020538807999400888
+                        }
+                      ]
+                    },
+                    {
+                      "name": "UnityEnvironment.step",
+                      "total": 53.66343762600445,
+                      "count": 233,
+                      "is_parallel": true,
+                      "self": 0.056233277970022755,
+                      "children": [
+                        {
+                          "name": "UnityEnvironment._generate_step_input",
+                          "total": 0.01325179801642662,
+                          "count": 233,
+                          "is_parallel": true,
+                          "self": 0.01325179801642662
+                        },
+                        {
+                          "name": "communicator.exchange",
+                          "total": 53.49927186899731,
+                          "count": 233,
+                          "is_parallel": true,
+                          "self": 53.49927186899731
+                        },
+                        {
+                          "name": "BrainInfo.process_pixels",
+                          "total": 0.09468068102069083,
+                          "count": 233,
+                          "is_parallel": true,
+                          "self": 0.028435923992219614,
+                          "children": [
+                            {
+                              "name": "image_decompress",
+                              "total": 0.06624475702847121,
+                              "count": 233,
+                              "is_parallel": true,
+                              "self": 0.06624475702847121
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

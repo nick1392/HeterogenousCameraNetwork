@@ -379,7 +379,7 @@ public class GridController : MonoBehaviour
 //    }
 
     public int maskedx = -1, maskedy = -1;
-    private void LateUpdate()
+    public void UpdateGCMValues()
     {
         UpdateTimeConfidenceGrid();
         UpdateObservationGridNewObs();

@@ -220,7 +220,7 @@ public class DroneAgent : Agent
 //        if (training)
 //        {
         drone.transform.position = nextPosition;
-        float max_steps = 24f;
+        float max_steps = 6f + 1f;
         float grid_size = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
         float gen_reward = 1f / (max_steps + grid_size);
         if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value > 0)
@@ -229,7 +229,11 @@ public class DroneAgent : Agent
             AddReward(gen_reward);
         if (decisions > grid_size)
             AddReward(-gen_reward);
+//        AddReward(-1f/max_steps);
         ccfov.Project();
+//        _gridController.();
+
+        _gridController.UpdateGCMValues(); //We force the update of the values 
 //        }
 
         mission = true;
@@ -241,6 +245,7 @@ public class DroneAgent : Agent
 //           AddReward(gcm - lastGCM);
         if (Math.Abs(gcm - 1) < 0.01f)
         {
+//            AddReward(1f);
             AddReward(1-gen_reward*grid_size);
             Done();
         }
@@ -248,7 +253,7 @@ public class DroneAgent : Agent
 
 
         if (logReward)
-            Debug.Log(GetReward());
+            Debug.Log("Agent step " + GetStepCount() + ": Reward " + GetReward() + "\nGCM: " + gcm);
 
         lastGCM = gcm;
         _gridController.currentTime++;

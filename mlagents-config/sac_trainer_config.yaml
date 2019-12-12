@@ -27,14 +27,15 @@ default:
 Drone:
     batch_size: 128
     normalize: false
-    num_layers: 1
+    num_layers: 2
     hidden_units: 128
     init_entcoef: 0.5
     buffer_init_steps: 1000
     buffer_size: 50000
     max_steps: 5.0e6
+    tau: 0.01
     summary_freq: 2000
-    time_horizon: 5
+    time_horizon: 48
     reward_signals:
         extrinsic:
             strength: 1.0

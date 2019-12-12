@@ -1,0 +1,8 @@
+Logging to ./logs
+Saving model due to mean reward increase: None -> 0.3
+--------------------------------------
+| % time spent exploring  | 18       |
+| episodes                | 1e+03    |
+| mean 100 episode reward | 0.3      |
+| steps                   | 4.52e+04 |
+--------------------------------------
