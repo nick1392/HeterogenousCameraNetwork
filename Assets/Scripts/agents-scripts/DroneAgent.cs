@@ -220,7 +220,7 @@ public class DroneAgent : Agent
 //        if (training)
 //        {
         drone.transform.position = nextPosition;
-        float max_steps = 6f + 1f;
+        float max_steps = 24f + 1f;
         float grid_size = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
         float gen_reward = 1f / (max_steps + grid_size);
         if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value > 0)

@@ -2601,7 +2601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &659277376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3155,6 +3155,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1378127280138060, guid: f6f82fa4780d2464cb4d59934e4099c9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4673472456550610, guid: f6f82fa4780d2464cb4d59934e4099c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6545,7 +6549,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: agentParameters.maxStep
-      value: 6
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: training
@@ -6565,7 +6569,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: logReward
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_Model
@@ -6573,6 +6577,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_BrainParameters.vectorObservationSize
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: m_BehaviorType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
@@ -6854,8 +6862,8 @@ MonoBehaviour:
   observationTextureNewObs: {fileID: 0}
   priorityTexture: {fileID: 0}
   priorityTexture_prec: {fileID: 0}
-  cellWidth: 30
-  cellDepth: 30
+  cellWidth: 15
+  cellDepth: 15
   ped_max: 2
   alfa: 0
   spatialThreshold: 0.2
