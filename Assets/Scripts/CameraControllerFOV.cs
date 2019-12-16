@@ -9,7 +9,8 @@ using Unity.Jobs;
 
 public class CameraControllerFOV : MonoBehaviour
 {
-    private readonly float cameraWidth = 640f,
+    [SerializeField]
+    private float cameraWidth = 640f,
         cameraHeight = 480f,
         downscalingFactor = 20f,
         FOV = 100f,

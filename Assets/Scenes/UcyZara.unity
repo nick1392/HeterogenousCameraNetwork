@@ -469,6 +469,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0c4ff5cdaec4c4eac874a340dd11f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraWidth: 640
+  cameraHeight: 480
+  downscalingFactor: 20
+  FOV: 100
+  distanceDeviation: 2
   maxDistance: 10
   frameRate: 15
   showDebugRays: 0
@@ -712,6 +717,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0c4ff5cdaec4c4eac874a340dd11f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraWidth: 640
+  cameraHeight: 480
+  downscalingFactor: 20
+  FOV: 100
+  distanceDeviation: 2
   maxDistance: 10
   frameRate: 15
   showDebugRays: 0
@@ -2747,7 +2757,7 @@ GameObject:
   - component: {fileID: 668102472}
   m_Layer: 0
   m_Name: Minimap Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4574,6 +4584,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0c4ff5cdaec4c4eac874a340dd11f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraWidth: 640
+  cameraHeight: 480
+  downscalingFactor: 20
+  FOV: 100
+  distanceDeviation: 2
   maxDistance: 10
   frameRate: 15
   showDebugRays: 0
@@ -5412,6 +5427,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0c4ff5cdaec4c4eac874a340dd11f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraWidth: 640
+  cameraHeight: 480
+  downscalingFactor: 20
+  FOV: 100
+  distanceDeviation: 2
   maxDistance: 10
   frameRate: 15
   showDebugRays: 0
@@ -6549,7 +6569,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: agentParameters.maxStep
-      value: 24
+      value: 38
       objectReference: {fileID: 0}
     - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: training
@@ -6571,10 +6591,19 @@ PrefabInstance:
       propertyPath: logReward
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: maxStepsCode
+      value: 38
+      objectReference: {fileID: 0}
+    - target: {fileID: 2017233233, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: VisionSize
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5022602860645237092, guid: c19d52691ddf3412ea0bc13507cee1ee,
+        type: 3}
     - target: {fileID: 2017233234, guid: d216bb91edc64412987986d3a508227b, type: 3}
       propertyPath: m_BrainParameters.vectorObservationSize
       value: 0
@@ -6586,7 +6615,25 @@ PrefabInstance:
     - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
         type: 3}
       propertyPath: field of view
-      value: 15.6
+      value: 83
+      objectReference: {fileID: 0}
+    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_projectionMatrixMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20213456121506806, guid: d216bb91edc64412987986d3a508227b,
+        type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1513068927, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: showDebugRays
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1513068927, guid: d216bb91edc64412987986d3a508227b, type: 3}
+      propertyPath: FOV
+      value: 120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d216bb91edc64412987986d3a508227b, type: 3}
@@ -6862,8 +6909,8 @@ MonoBehaviour:
   observationTextureNewObs: {fileID: 0}
   priorityTexture: {fileID: 0}
   priorityTexture_prec: {fileID: 0}
-  cellWidth: 15
-  cellDepth: 15
+  cellWidth: 12.5
+  cellDepth: 12.5
   ped_max: 2
   alfa: 0
   spatialThreshold: 0.2
@@ -6890,6 +6937,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0c4ff5cdaec4c4eac874a340dd11f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraWidth: 640
+  cameraHeight: 480
+  downscalingFactor: 20
+  FOV: 100
+  distanceDeviation: 2
   maxDistance: 10
   frameRate: 15
   showDebugRays: 0

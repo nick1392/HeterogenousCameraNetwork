@@ -166,6 +166,8 @@ public class DroneAgent : Agent
             new Vector3(_gridController.cellWidth * 3, 0.1f, _gridController.cellDepth * 3));
     }
 
+    [SerializeField]
+    private int maxStepsCode;
     public override void AgentAction(float[] vectorAction)
     {
 //        Debug.Log("Act " + (Time.time-lastTime));
@@ -220,7 +222,7 @@ public class DroneAgent : Agent
 //        if (training)
 //        {
         drone.transform.position = nextPosition;
-        float max_steps = 24f + 1f;
+        float max_steps = maxStepsCode + 1f;
         float grid_size = _gridController.priorityGrid.GetLength(0) * _gridController.priorityGrid.GetLength(1);
         float gen_reward = 1f / (max_steps + grid_size);
         if (_gridController.overralConfidenceGrid[x_coord + x, y_coord + y].value > 0)
