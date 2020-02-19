@@ -13,5 +13,6 @@ The visula appearance of the crowd is generated using the [UMA library](https://
 
 ## Requirements
 
-1. [Unity 2017.4 LTS](https://unity3d.com/get-unity/download/archive?_ga=2.126095502.2059036969.1536495081-1535769236.1522161653)
-
+1. [Unity 2019.1.0f2](https://unity3d.com/unity/whats-new/2019.1.0)
+2. Python 3.6 or greater
+3. Mlagents v0.12, `pip install mlagents==0.12.1`
